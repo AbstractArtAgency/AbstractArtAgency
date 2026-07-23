@@ -1,154 +1,163 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef, useEffect } from "react";
+import { motion, useTransform, useMotionValue } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 
-const projects = [
+const sites = [
+  {
+    intro: true,
+    title: "Zobacz nasze prace",
+    content: "Przewiń, aby zobaczyć wybrane realizacje — każde w osobnym 'oknie' przeglądarki.",
+  },
   {
     title: "Quantum Commerce",
-    category: "E-Commerce Platform",
-    desc: "A WebGL-powered shopping experience where products orbit in 3D space. Built for a luxury brand with 10M+ monthly visitors.",
+    url: "https://quantum.example",
     image:
       "https://media.base44.com/images/public/6a60bebe0fa5491af08b0f4e/a218b0a37_generated_230c4fff.png",
-    tags: ["WebGL", "React", "Edge"],
   },
   {
     title: "Neural Canvas",
-    category: "AI Creative Suite",
-    desc: "Real-time generative art platform powered by neural networks. Users paint with algorithms - every stroke is unique.",
+    url: "https://neural.example",
     image:
       "https://media.base44.com/images/public/6a60bebe0fa5491af08b0f4e/62c956fed_generated_e6a3d272.png",
-    tags: ["AI", "Canvas", "Realtime"],
   },
   {
     title: "Prism Protocol",
-    category: "Web3 Application",
-    desc: "A decentralized marketplace with glassmorphic 3D asset previews and sub-second transaction rendering.",
+    url: "https://prism.example",
     image:
       "https://media.base44.com/images/public/6a60bebe0fa5491af08b0f4e/5cf3d383d_generated_be1bc845.png",
-    tags: ["Web3", "Three.js", "Solidity"],
-  },
-  {
-    title: "Flow State",
-    category: "Data Visualization",
-    desc: "A living dashboard for 2 billion data points. Flows, breathes, and reveals patterns invisible to static charts.",
-    image:
-      "https://media.base44.com/images/public/6a60bebe0fa5491af08b0f4e/209480481_generated_bfb5bea0.png",
-    tags: ["D3.js", "WebGL", "Streaming"],
   },
 ];
 
 export default function Portfolio() {
   const targetRef = useRef<HTMLElement | null>(null);
-  const { scrollYProgress } = useScroll({ target: targetRef });
-  const x = useTransform(scrollYProgress, [0, 1], ["2%", "-68%"]);
+  const numSites = sites.length;
+
+  // manual scroll-driven progress aligned to nav bottom
+  const progress = useMotionValue(0);
+
+  useEffect(() => {
+    const target = targetRef.current;
+    if (!target) return;
+
+    const nav = document.querySelector('nav');
+    const headerHeight = nav ? (nav as HTMLElement).getBoundingClientRect().height : 0;
+
+    const updateBounds = () => {
+      const rect = target.getBoundingClientRect();
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop || 0;
+      const start = rect.top + scrollTop - headerHeight; // when section top hits nav bottom
+      const span = window.innerHeight * (numSites + 1);
+      const end = start + span;
+      return { start, end };
+    };
+
+    let bounds = updateBounds();
+
+    const onScroll = () => {
+      const y = window.pageYOffset || document.documentElement.scrollTop || 0;
+      const p = (y - bounds.start) / (bounds.end - bounds.start);
+      progress.set(Math.max(0, Math.min(1, p)));
+    };
+
+    const onResize = () => {
+      bounds = updateBounds();
+      onScroll();
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onResize);
+    onResize();
+
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onResize);
+    };
+  }, [numSites, progress]);
+
+  const shrink = useTransform(progress, [0, 0.12], [1, 0.7]);
+  const frameOpacity = useTransform(progress, [0.02, 0.18], [0, 1]);
+  const translateX = useTransform(progress, [0.12, 0.88], ["0%", `${-(numSites - 1) * 100}%`]);
+  const finalScale = useTransform(progress, [0.88, 1], [0.72, 1]);
+  const finalOpacity = useTransform(progress, [0.86, 0.95], [0, 1]);
 
   return (
-    <section id="work" ref={targetRef} className="relative h-[350vh] bg-void">
-      <div className="sticky top-0 flex h-screen flex-col overflow-hidden">
-        <div className="absolute inset-x-0 top-0 z-10 px-6 pt-28">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="mx-auto max-w-7xl"
-          >
-            <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-plasma">
-              / 03 - Selected Work
-            </span>
-            <h2 className="mt-4 font-display text-4xl font-bold tracking-tight text-electric md:text-6xl">
-              The <span className="text-mask-gradient">evidence</span>
-            </h2>
-          </motion.div>
+    <section id="work" ref={targetRef} className="relative h-[500vh] bg-transparent">
+      <div className="sticky top-0 z-10 h-screen">
+        {/* header */}
+        <div className="absolute inset-x-0 top-6 z-20 px-6">
+          <div className="mx-auto max-w-7xl">
+            <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-plasma">/ 03 - Selected Work</span>
+            <h2 className="mt-4 font-display text-4xl font-bold tracking-tight text-electric md:text-6xl">The <span className="text-mask-gradient">evidence</span></h2>
+          </div>
         </div>
 
-        <div className="flex h-full items-center">
-          <motion.div style={{ x }} className="flex gap-6 pl-6 md:pl-16">
-            {projects.map((project, index) => (
-              <div
-                key={project.title}
-                className="group relative h-[62vh] w-[80vw] flex-shrink-0 overflow-hidden rounded-2xl md:w-[55vw] lg:w-[40vw]"
-              >
-                <Image
-                  src={project.image}
-                  alt={project.title}
-                  fill
-                  sizes="(min-width: 1024px) 40vw, (min-width: 768px) 55vw, 80vw"
-                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-void via-void/40 to-transparent" />
-                <div className="absolute inset-0 bg-void/20 transition-colors duration-500 group-hover:bg-void/10" />
-
-                <div className="absolute inset-x-0 bottom-0 p-8 md:p-10">
-                  <div className="mb-4 flex items-center gap-3">
-                    <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-plasma">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                    <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-chrome">
-                      / {project.category}
-                    </span>
-                  </div>
-
-                  <div className="flex items-end justify-between gap-4">
-                    <div>
-                      <h3 className="mb-3 font-display text-3xl font-bold text-electric md:text-4xl">
-                        {project.title}
-                      </h3>
-                      <p className="mb-4 max-w-md text-sm leading-relaxed text-chrome">
-                        {project.desc}
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        {project.tags.map((tag) => (
-                          <span
-                            key={tag}
-                            className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 font-mono text-[10px] text-chrome"
-                          >
-                            {tag}
-                          </span>
-                        ))}
+        <div className="flex h-full items-center justify-center">
+          <div className="mx-auto w-full max-w-7xl px-6">
+            <div className="flex items-center justify-center h-screen">
+              <motion.div style={{ scale: shrink }} className="relative w-screen h-screen will-change-transform">
+                {/* content panels (each is its own scrollable 'window') */}
+                <div className="absolute inset-0 overflow-hidden">
+                  <motion.div style={{ x: translateX }} className="flex h-full will-change-transform">
+                    {sites.map((site, i) => (
+                      <div key={i} className="relative flex-shrink-0 h-full w-screen">
+                        <div className="absolute inset-0 m-6 overflow-auto rounded-lg border border-white/10 bg-white">
+                          {site.intro ? (
+                            <div className="flex h-full items-center justify-center p-8">
+                              <div className="max-w-xl text-center">
+                                <h3 className="font-display text-4xl font-bold text-electric">{site.title}</h3>
+                                <p className="mt-4 text-chrome">{site.content}</p>
+                              </div>
+                            </div>
+                          ) : (
+                            <>
+                              <div className="flex items-center justify-between px-6 py-4 border-b border-white/5">
+                                <div className="font-mono text-sm text-chrome">{site.url}</div>
+                                <div className="font-display font-bold text-electric">{site.title}</div>
+                              </div>
+                              <div className="p-6">
+                                <div className="aspect-[16/9] w-full overflow-hidden rounded-md bg-[#eceff0] relative">
+                                  <Image src={site.image} alt={site.title} fill className="object-cover" />
+                                </div>
+                                <p className="mt-4 text-chrome">A short description of {site.title} and the role played in crafting the experience.</p>
+                                <div className="mt-6 space-y-4">
+                                  <p className="text-chrome">Example case study content. Scroll inside this window to see independent scrolling.</p>
+                                  <p className="text-chrome">More details, stats and imagery about the project.</p>
+                                  <p className="text-chrome">Even more content to show inner-window scroll behavior.</p>
+                                </div>
+                              </div>
+                            </>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full border border-white/20 text-electric transition-all duration-500 group-hover:border-plasma group-hover:bg-plasma">
-                      <ArrowUpRight className="h-5 w-5 transition-transform group-hover:scale-110" />
-                    </div>
-                  </div>
+                    ))}
+                  </motion.div>
                 </div>
 
-                <div className="absolute right-4 top-4 h-8 w-8">
-                  <div className="absolute right-0 top-0 h-px w-full bg-plasma/40" />
-                  <div className="absolute right-0 top-0 h-full w-px bg-plasma/40" />
-                </div>
-              </div>
-            ))}
-
-            <div className="flex h-[62vh] w-[40vw] flex-shrink-0 flex-col items-center justify-center px-6 text-center md:w-[30vw]">
-              <h3 className="mb-4 font-display text-3xl font-bold text-electric">
-                Your project
-                <br />
-                <span className="text-mask-gradient">goes here</span>
-              </h3>
-              <p className="mb-6 font-mono text-sm text-chrome">
-                The next manifestation could be yours.
-              </p>
-              <a
-                href="#contact"
-                className="rounded-full border border-plasma/30 px-6 py-3 font-mono text-sm text-electric transition-all hover:border-plasma/50 hover:bg-plasma/10"
-              >
-                Start a Project -&gt;
-              </a>
+                {/* overlay frame (border only) that fades in; content underneath is fully interactive */}
+                <motion.div style={{ opacity: frameOpacity }} className="absolute inset-0 pointer-events-none flex items-center justify-center">
+                  <div className="rounded-2xl border-2 border-white/10 shadow-lg w-[92vw] h-[92vh]" />
+                </motion.div>
+              </motion.div>
             </div>
-          </motion.div>
+          </div>
         </div>
+      </div>
 
-        <div className="absolute bottom-8 left-1/2 h-px w-48 -translate-x-1/2 overflow-hidden rounded-full bg-white/10">
-          <motion.div
-            style={{ scaleX: scrollYProgress }}
-            className="h-full origin-left bg-plasma"
-          />
-        </div>
+      {/* final expanding case study */}
+      <div className="relative mt-[100vh] flex items-center justify-center">
+        <motion.div style={{ scale: finalScale, opacity: finalOpacity }} className="mx-auto w-full max-w-4xl px-6">
+          <div className="rounded-2xl border border-white/10 bg-white p-12 shadow-lg">
+            <h3 className="font-display text-3xl font-bold text-electric">Deep Dive Case Study</h3>
+            <p className="mt-4 text-chrome">This final section grows into the viewport and becomes a normal vertically-scrollable section where a full case study is presented. Scroll further to continue through the site normally.</p>
+            <div className="mt-6 space-y-6">
+              <p className="text-chrome">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.</p>
+              <p className="text-chrome">Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris.</p>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   );
