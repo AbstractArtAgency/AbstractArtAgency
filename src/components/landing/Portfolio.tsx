@@ -66,12 +66,12 @@ export default function Portfolio() {
             <div className="flex items-center justify-center h-screen">
               <motion.div
                 style={{ scale: shrink }}
-                className="relative w-[86vw] max-w-[1200px] transition-transform will-change-transform"
+                className="relative w-screen h-screen transition-transform will-change-transform"
               >
-                {/* faux mac window frame */}
-                <div className="rounded-2xl border border-white/10 bg-white/80 shadow-lg">
-                  {/* title bar */}
-                  <div className="flex items-center gap-3 px-4 py-2">
+                {/* faux mac window frame - full viewport at start */}
+                <div className="rounded-2xl border border-white/10 bg-white/80 shadow-lg h-full w-full flex flex-col">
+                  {/* title bar (fixed height) */}
+                  <div className="flex items-center gap-3 px-4 py-2 flex-none">
                     <div className="flex gap-2">
                       <span className="h-3 w-3 rounded-full bg-red-500/80 inline-block" />
                       <span className="h-3 w-3 rounded-full bg-yellow-500/80 inline-block" />
@@ -80,14 +80,14 @@ export default function Portfolio() {
                     <div className="ml-4 text-xs font-mono text-chrome">AbstractArt Browser</div>
                   </div>
 
-                  {/* viewport area */}
-                  <div className="h-[72vh] overflow-hidden bg-[#f5f5f5]">
+                  {/* viewport area fills remaining height */}
+                  <div className="flex-1 overflow-hidden bg-[#f5f5f5]">
                     <motion.div
                       style={{ x: translateX }}
                       className="flex h-full touch-pan-x will-change-transform"
                     >
                       {sites.map((site, i) => (
-                        <div key={site.title} className="relative flex-shrink-0 h-full w-[100vw] md:w-[900px] lg:w-[1100px]">
+                        <div key={site.title} className="relative flex-shrink-0 h-full w-screen">
                           {/* page chrome inside window */}
                           <div className="absolute inset-0 m-6 overflow-hidden rounded-lg border border-white/10 bg-white">
                             {/* Mock page header */}
