@@ -33,9 +33,10 @@ export default function ParticleBackground() {
     const originalPositions = new Float32Array(particleCount * 3);
     const colors = new Float32Array(particleCount * 3);
     const palette = [
-      new THREE.Color("#ef4444"), // red
-      new THREE.Color("#ffffff"), // white
-      new THREE.Color("#9ca3af"), // gray
+      new THREE.Color("#FF5722"), // accent orange
+      new THREE.Color("#76ABAE"), // teal
+      new THREE.Color("#303841"), // dark
+      new THREE.Color("#F5F5F5"), // light
     ];
 
     // create a circular sprite texture so points render round instead of square
