@@ -37,6 +37,7 @@ export default function Portfolio() {
   // 0.12 - 0.88 : horizontal scrolling across sites
   // 0.88 - 1 : final expansion
   const shrink = useTransform(scrollYProgress, [0, 0.12], [1, 0.62]);
+  const windowOpacity = useTransform(scrollYProgress, [0, 0.12], [0, 1]);
   const translateX = useTransform(
     scrollYProgress,
     [0.12, 0.88],
@@ -65,7 +66,7 @@ export default function Portfolio() {
           <div className="mx-auto w-full max-w-7xl px-6">
             <div className="flex items-center justify-center h-screen">
               <motion.div
-                style={{ scale: shrink }}
+                style={{ scale: shrink, opacity: windowOpacity }}
                 className="relative w-screen h-screen transition-transform will-change-transform"
               >
                 {/* faux mac window frame - full viewport at start */}
