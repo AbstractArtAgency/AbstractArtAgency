@@ -21,6 +21,10 @@ export default function ParticleBackground() {
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(width, height);
+    // make the canvas visually subtle and non-interactive so foreground text remains the focus
+    renderer.domElement.style.pointerEvents = "none";
+    renderer.domElement.style.opacity = "0.45"; // reduce visibility
+    renderer.domElement.style.filter = "blur(2px) saturate(0.95)"; // light blur + slight desaturation
     mount.appendChild(renderer.domElement);
 
     const particleCount = 2500;
@@ -72,14 +76,14 @@ export default function ParticleBackground() {
     geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
 
     const material = new THREE.PointsMaterial({
-      // slightly larger size for the circular sprite
-      size: 0.9,
+      // slightly smaller, subtler points for a lighter background
+      size: 0.6,
       map: spriteTexture,
       vertexColors: true,
       transparent: true,
       alphaTest: 0.01,
-      opacity: 0.95,
-      blending: THREE.AdditiveBlending,
+      opacity: 0.35, // make particles much less prominent
+      blending: THREE.NormalBlending, // avoid bright additive glow
       sizeAttenuation: true,
       depthWrite: false,
     });
