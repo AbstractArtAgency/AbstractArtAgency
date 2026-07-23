@@ -5,6 +5,12 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 
 const sites = [
+  // intro window
+  {
+    intro: true,
+    title: "Zobacz nasze prace",
+    content: "Przewiń, aby zobaczyć wybrane realizacje — każde w osobnym 'oknie' przeglądarki.",
+  },
   {
     title: "Quantum Commerce",
     url: "https://quantum.example",
@@ -66,50 +72,68 @@ export default function Portfolio() {
           <div className="mx-auto w-full max-w-7xl px-6">
             <div className="flex items-center justify-center h-screen">
               <motion.div
-                style={{ scale: shrink, opacity: windowOpacity }}
+                style={{ scale: shrink }}
                 className="relative w-screen h-screen transition-transform will-change-transform"
               >
-                {/* faux mac window frame - full viewport at start */}
-                <div className="rounded-2xl border border-white/10 bg-white/80 shadow-lg h-full w-full flex flex-col">
-                  {/* title bar (fixed height) */}
-                  <div className="flex items-center gap-3 px-4 py-2 flex-none">
-                    <div className="flex gap-2">
-                      <span className="h-3 w-3 rounded-full bg-red-500/80 inline-block" />
-                      <span className="h-3 w-3 rounded-full bg-yellow-500/80 inline-block" />
-                      <span className="h-3 w-3 rounded-full bg-green-500/80 inline-block" />
-                    </div>
-                    <div className="ml-4 text-xs font-mono text-chrome">AbstractArt Browser</div>
-                  </div>
-
-                  {/* viewport area fills remaining height */}
-                  <div className="flex-1 overflow-hidden bg-[#f5f5f5]">
+                {/* CONTENT (always visible) */}
+                <div className="absolute inset-0 w-full h-full">
+                  <div className="h-full w-full flex-1 overflow-hidden bg-transparent">
                     <motion.div
                       style={{ x: translateX }}
                       className="flex h-full touch-pan-x will-change-transform"
                     >
                       {sites.map((site, i) => (
-                        <div key={site.title} className="relative flex-shrink-0 h-full w-screen">
-                          {/* page chrome inside window */}
-                          <div className="absolute inset-0 m-6 overflow-hidden rounded-lg border border-white/10 bg-white">
-                            {/* Mock page header */}
-                            <div className="flex items-center justify-between px-6 py-4 border-b border-white/5">
-                              <div className="font-mono text-sm text-chrome">{site.url}</div>
-                              <div className="font-display font-bold text-electric">{site.title}</div>
-                            </div>
-
-                            {/* content area - show image as hero of the site */}
-                            <div className="p-6">
-                              <div className="aspect-[16/9] w-full overflow-hidden rounded-md bg-[#eceff0]">
-                                <Image src={site.image} alt={site.title} fill className="object-cover" />
+                        <div key={i} className="relative flex-shrink-0 h-full w-screen">
+                          {/* page chrome inside each window - content area is scrollable independently */}
+                          <div className="absolute inset-0 m-6 overflow-auto rounded-lg border border-white/10 bg-white">
+                            {/* If intro show centered text */}
+                            {site.intro ? (
+                              <div className="flex h-full w-full items-center justify-center p-8">
+                                <div className="max-w-xl text-center">
+                                  <h3 className="font-display text-4xl font-bold text-electric">{site.title}</h3>
+                                  <p className="mt-4 text-chrome">{site.content}</p>
+                                </div>
                               </div>
-                              <p className="mt-4 text-chrome">A short description of {site.title} and the role played in crafting the experience.</p>
-                            </div>
+                            ) : (
+                              <>
+                                <div className="flex items-center justify-between px-6 py-4 border-b border-white/5">
+                                  <div className="font-mono text-sm text-chrome">{site.url}</div>
+                                  <div className="font-display font-bold text-electric">{site.title}</div>
+                                </div>
+                                <div className="p-6">
+                                  <div className="aspect-[16/9] w-full overflow-hidden rounded-md bg-[#eceff0] relative">
+                                    <Image src={site.image} alt={site.title} fill className="object-cover" />
+                                  </div>
+                                  <p className="mt-4 text-chrome">A short description of {site.title} and the role played in crafting the experience.</p>
+                                  {/* filler content to allow inner scrolling demonstration */}
+                                  <div className="mt-6 space-y-4">
+                                    <p className="text-chrome">Example case study content. Scroll inside this window to see independent scrolling.</p>
+                                    <p className="text-chrome">More details, stats and imagery about the project.</p>
+                                    <p className="text-chrome">Even more content to show inner-window scroll behavior.</p>
+                                  </div>
+                                </div>
+                              </>
+                            )}
                           </div>
                         </div>
                       ))}
                     </motion.div>
                   </div>
                 </div>
+
+                {/* FRAME (only border / chrome, fades in) */}
+                <motion.div style={{ opacity: windowOpacity }} className="absolute inset-0 pointer-events-none flex items-center justify-center">
+                  <div className="rounded-2xl border-2 border-white/10 shadow-lg w-[92vw] h-[92vh]">
+                    {/* title bar */}
+                    <div className="flex items-center gap-3 px-4 py-2">
+                      <div className="flex gap-2">
+                        <span className="h-3 w-3 rounded-full bg-red-500/80 inline-block" />
+                        <span className="h-3 w-3 rounded-full bg-yellow-500/80 inline-block" />
+                        <span className="h-3 w-3 rounded-full bg-green-500/80 inline-block" />
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
               </motion.div>
             </div>
           </div>
