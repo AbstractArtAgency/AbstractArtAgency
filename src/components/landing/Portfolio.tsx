@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef, useEffect } from "react";
+import { motion, useMotionValue, useTransform } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 
@@ -30,126 +30,127 @@ const projects = [
       "https://media.base44.com/images/public/6a60bebe0fa5491af08b0f4e/5cf3d383d_generated_be1bc845.png",
     tags: ["Web3", "Three.js", "Solidity"],
   },
-  {
-    title: "Flow State",
-    category: "Data Visualization",
-    desc: "A living dashboard for 2 billion data points. Flows, breathes, and reveals patterns invisible to static charts.",
-    image:
-      "https://media.base44.com/images/public/6a60bebe0fa5491af08b0f4e/209480481_generated_bfb5bea0.png",
-    tags: ["D3.js", "WebGL", "Streaming"],
-  },
 ];
 
 export default function Portfolio() {
   const targetRef = useRef<HTMLElement | null>(null);
-  const { scrollYProgress } = useScroll({ target: targetRef });
-  const x = useTransform(scrollYProgress, [0, 1], ["2%", "-68%"]);
+  const items = [
+    { type: "intro", title: "Zobacz nasze prace", subtitle: "Przewiń, aby zobaczyć wybrane realizacje — każde w osobnym 'oknie'" },
+    ...projects,
+    { type: "outro", title: "Chcesz więcej?", subtitle: "Skontaktuj się z nami, aby omówić projekt" },
+  ];
+  const count = items.length;
+
+  const progress = useMotionValue(0);
+
+  useEffect(() => {
+    const el = targetRef.current;
+    if (!el) return;
+
+    const nav = document.querySelector("nav");
+    const navHeight = nav ? (nav as HTMLElement).getBoundingClientRect().height : 0;
+
+    const calc = () => {
+      const rect = el.getBoundingClientRect();
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop || 0;
+      const start = rect.top + scrollTop - navHeight; // when top of section meets bottom of header
+      const span = window.innerHeight * (count + 0.8); // allow space for horizontal travel + final expand
+      const end = start + span;
+      return { start, end };
+    };
+
+    let bounds = calc();
+
+    const onScroll = () => {
+      const y = window.pageYOffset || document.documentElement.scrollTop || 0;
+      const p = (y - bounds.start) / (bounds.end - bounds.start);
+      progress.set(Math.max(0, Math.min(1, p)));
+    };
+
+    const onResize = () => {
+      bounds = calc();
+      onScroll();
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onResize);
+    onResize();
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onResize);
+    };
+  }, [count, progress]);
+
+  // Combined scale: full -> small -> small -> full
+  const scale = useTransform(progress, [0, 0.12, 0.88, 1], [1, 0.7, 0.7, 1]);
+  const frameOpacity = useTransform(progress, [0, 0.12, 0.88, 1], [0, 1, 1, 0]);
+  const translateX = useTransform(progress, [0.12, 0.88], ["0%", `${-(count - 1) * 100}%`]);
 
   return (
-    <section id="work" ref={targetRef} className="relative h-[350vh] bg-void">
-      <div className="sticky top-0 flex h-screen flex-col overflow-hidden">
-        <div className="absolute inset-x-0 top-0 z-10 px-6 pt-28">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="mx-auto max-w-7xl"
-          >
-            <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-plasma">
-              / 03 - Selected Work
-            </span>
-            <h2 className="mt-4 font-display text-4xl font-bold tracking-tight text-electric md:text-6xl">
-              The <span className="text-mask-gradient">evidence</span>
-            </h2>
-          </motion.div>
+    <section id="work" ref={targetRef} className="relative h-[500vh] bg-transparent">
+      <div className="sticky top-0 z-10 h-screen">
+        <div className="absolute inset-x-0 top-6 z-20 px-6 pt-6">
+          <div className="mx-auto max-w-7xl">
+            <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-plasma">/ 03 - Selected Work</span>
+            <h2 className="mt-4 font-display text-4xl font-bold tracking-tight text-electric md:text-6xl">The <span className="text-mask-gradient">evidence</span></h2>
+          </div>
         </div>
 
-        <div className="flex h-full items-center">
-          <motion.div style={{ x }} className="flex gap-6 pl-6 md:pl-16">
-            {projects.map((project, index) => (
-              <div
-                key={project.title}
-                className="group relative h-[62vh] w-[80vw] flex-shrink-0 overflow-hidden rounded-2xl md:w-[55vw] lg:w-[40vw]"
-              >
-                <Image
-                  src={project.image}
-                  alt={project.title}
-                  fill
-                  sizes="(min-width: 1024px) 40vw, (min-width: 768px) 55vw, 80vw"
-                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-void via-void/40 to-transparent" />
-                <div className="absolute inset-0 bg-void/20 transition-colors duration-500 group-hover:bg-void/10" />
+        <div className="flex h-full items-center justify-center">
+          <div className="w-full h-full flex items-center justify-center">
+            <motion.div style={{ scale }} className="relative w-screen h-screen flex items-center justify-center">
+              {/* sliding horizontal strip of panels */}
+              <div className="absolute inset-0 overflow-hidden">
+                <motion.div style={{ x: translateX }} className="flex h-full will-change-transform">
+                  {items.map((it, idx) => (
+                    <div key={idx} className="flex-shrink-0 w-screen h-full flex items-center justify-center">
+                      {/* apple-like window */}
+                      <div className="relative w-[86vw] h-[78vh] rounded-2xl overflow-hidden bg-white border border-white/5 shadow-md">
+                        {/* titlebar */}
+                        <div className="absolute top-0 left-0 right-0 flex items-center gap-3 px-4 py-3">
+                          <span className="h-3 w-3 rounded-full bg-red-500/80" />
+                          <span className="h-3 w-3 rounded-full bg-yellow-500/80" />
+                          <span className="h-3 w-3 rounded-full bg-green-500/80" />
+                          <div className="ml-4 text-xs font-mono text-chrome">AbstractArt Browser</div>
+                        </div>
 
-                <div className="absolute inset-x-0 bottom-0 p-8 md:p-10">
-                  <div className="mb-4 flex items-center gap-3">
-                    <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-plasma">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                    <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-chrome">
-                      / {project.category}
-                    </span>
-                  </div>
+                        {/* content */}
+                        <div className="absolute inset-0 p-8 flex items-center justify-center">
+                          {it.type === "intro" || it.type === "outro" ? (
+                            <div className="text-center max-w-xl">
+                              <h3 className="font-display text-4xl font-bold text-electric">{it.title}</h3>
+                              <p className="mt-3 text-chrome">{it.subtitle}</p>
+                            </div>
+                          ) : (
+                            <div className="w-full h-full flex flex-col">
+                              <div className="flex-1 relative rounded-md overflow-hidden">
+                                <Image src={it.image} alt={it.title} fill className="object-cover" />
+                              </div>
+                              <div className="mt-4">
+                                <h4 className="font-display text-2xl text-electric">{it.title}</h4>
+                                <p className="text-chrome mt-2">{it.desc}</p>
+                              </div>
+                            </div>
+                          )}
+                        </div>
 
-                  <div className="flex items-end justify-between gap-4">
-                    <div>
-                      <h3 className="mb-3 font-display text-3xl font-bold text-electric md:text-4xl">
-                        {project.title}
-                      </h3>
-                      <p className="mb-4 max-w-md text-sm leading-relaxed text-chrome">
-                        {project.desc}
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        {project.tags.map((tag) => (
-                          <span
-                            key={tag}
-                            className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 font-mono text-[10px] text-chrome"
-                          >
-                            {tag}
-                          </span>
-                        ))}
+                        {/* frame border (fades in) */}
+                        <motion.div style={{ opacity: frameOpacity }} className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                          <div className="w-[92%] h-[92%] rounded-2xl border-2 border-white/10" />
+                        </motion.div>
                       </div>
                     </div>
-                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full border border-white/20 text-electric transition-all duration-500 group-hover:border-plasma group-hover:bg-plasma">
-                      <ArrowUpRight className="h-5 w-5 transition-transform group-hover:scale-110" />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="absolute right-4 top-4 h-8 w-8">
-                  <div className="absolute right-0 top-0 h-px w-full bg-plasma/40" />
-                  <div className="absolute right-0 top-0 h-full w-px bg-plasma/40" />
-                </div>
+                  ))}
+                </motion.div>
               </div>
-            ))}
-
-            <div className="flex h-[62vh] w-[40vw] flex-shrink-0 flex-col items-center justify-center px-6 text-center md:w-[30vw]">
-              <h3 className="mb-4 font-display text-3xl font-bold text-electric">
-                Your project
-                <br />
-                <span className="text-mask-gradient">goes here</span>
-              </h3>
-              <p className="mb-6 font-mono text-sm text-chrome">
-                The next manifestation could be yours.
-              </p>
-              <a
-                href="#contact"
-                className="rounded-full border border-plasma/30 px-6 py-3 font-mono text-sm text-electric transition-all hover:border-plasma/50 hover:bg-plasma/10"
-              >
-                Start a Project -&gt;
-              </a>
-            </div>
-          </motion.div>
-        </div>
-
-        <div className="absolute bottom-8 left-1/2 h-px w-48 -translate-x-1/2 overflow-hidden rounded-full bg-white/10">
-          <motion.div
-            style={{ scaleX: scrollYProgress }}
-            className="h-full origin-left bg-plasma"
-          />
+            </motion.div>
+          </div>
         </div>
       </div>
+
+      {/* spacer after to allow expansion and normal scroll */}
+      <div className="h-screen bg-transparent" />
     </section>
   );
 }
