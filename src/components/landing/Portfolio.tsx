@@ -1,12 +1,27 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { motion, useMotionValue, useTransform } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 
-const projects = [
+type PortfolioItem =
+  | {
+      type: "intro" | "outro";
+      title: string;
+      subtitle: string;
+    }
+  | {
+      type: "project";
+      title: string;
+      category: string;
+      desc: string;
+      image: string;
+      tags: string[];
+    };
+
+const projects: PortfolioItem[] = [
   {
+    type: "project",
     title: "Quantum Commerce",
     category: "E-Commerce Platform",
     desc: "A WebGL-powered shopping experience where products orbit in 3D space. Built for a luxury brand with 10M+ monthly visitors.",
@@ -15,6 +30,7 @@ const projects = [
     tags: ["WebGL", "React", "Edge"],
   },
   {
+    type: "project",
     title: "Neural Canvas",
     category: "AI Creative Suite",
     desc: "Real-time generative art platform powered by neural networks. Users paint with algorithms - every stroke is unique.",
@@ -23,6 +39,7 @@ const projects = [
     tags: ["AI", "Canvas", "Realtime"],
   },
   {
+    type: "project",
     title: "Prism Protocol",
     category: "Web3 Application",
     desc: "A decentralized marketplace with glassmorphic 3D asset previews and sub-second transaction rendering.",
@@ -32,9 +49,14 @@ const projects = [
   },
 ];
 
+const isTextSlide = (
+  item: PortfolioItem,
+): item is Extract<PortfolioItem, { type: "intro" | "outro" }> =>
+  item.type === "intro" || item.type === "outro";
+
 export default function Portfolio() {
   const targetRef = useRef<HTMLElement | null>(null);
-  const items = [
+  const items: PortfolioItem[] = [
     {
       type: "intro",
       title: "Zobacz nasze prace",
@@ -51,6 +73,16 @@ export default function Portfolio() {
   const count = items.length;
 
   const progress = useMotionValue(0);
+  const [translateXEnd, setTranslateXEnd] = useState(() => {
+    if (typeof window === "undefined") {
+      return "0px";
+    }
+    const rootFontSize = parseFloat(
+      getComputedStyle(document.documentElement).fontSize,
+    );
+    const gapPx = (rootFontSize || 16) * 5;
+    return `${-((count - 1) * window.innerWidth + (count - 1) * gapPx)}px`;
+  });
 
   useEffect(() => {
     const el = targetRef.current;
@@ -71,6 +103,15 @@ export default function Portfolio() {
       return { start, end };
     };
 
+    const updateTranslateXEnd = () => {
+      const rootFontSize = parseFloat(
+        getComputedStyle(document.documentElement).fontSize,
+      );
+      const gapPx = (rootFontSize || 16) * 5;
+      const target = -((count - 1) * window.innerWidth + (count - 1) * gapPx);
+      setTranslateXEnd(`${target}px`);
+    };
+
     let bounds = calc();
 
     const onScroll = () => {
@@ -81,6 +122,7 @@ export default function Portfolio() {
 
     const onResize = () => {
       bounds = calc();
+      updateTranslateXEnd();
       onScroll();
     };
 
@@ -104,7 +146,7 @@ export default function Portfolio() {
   const translateX = useTransform(
     progress,
     [0.12, 0.78],
-    ["0%", `${-(count - 1) * 100}%`],
+    ["0px", translateXEnd],
   );
 
   return (
@@ -145,7 +187,7 @@ export default function Portfolio() {
 
                       {/* content */}
                       <div className="relative inset-0 p-8 flex items-center justify-center">
-                        {it.type === "intro" || it.type === "outro" ? (
+                        {isTextSlide(it) ? (
                           <div className="text-center max-w-xl">
                             <h3 className="font-display text-4xl font-bold text-electric">
                               {it.title}
