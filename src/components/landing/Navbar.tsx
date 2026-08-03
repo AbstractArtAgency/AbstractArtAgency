@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 
 const links = [
@@ -11,17 +11,36 @@ const links = [
 ];
 
 export default function Navbar() {
+  const navRef = useRef<HTMLElement | null>(null);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 50);
+    const syncHeaderHeight = () => {
+      if (!navRef.current) return;
+      document.documentElement.style.setProperty(
+        "--header-height",
+        `${navRef.current.getBoundingClientRect().height}px`,
+      );
+    };
+
+    const onScroll = () => {
+      setScrolled(window.scrollY > 50);
+      requestAnimationFrame(syncHeaderHeight);
+    };
+
     onScroll();
     window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
+    window.addEventListener("resize", syncHeaderHeight);
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", syncHeaderHeight);
+    };
   }, []);
 
   return (
     <motion.nav
+      ref={navRef}
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
@@ -33,11 +52,6 @@ export default function Navbar() {
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6">
         <a href="#top" className="group flex items-center gap-2.5">
-          <div className="relative h-7 w-7">
-            <div className="absolute inset-0 rotate-45 rounded-sm border-2 border-plasma transition-transform duration-700 group-hover:rotate-[135deg]" />
-            <div className="absolute inset-1.5 rotate-45 rounded-sm bg-plasma/40 blur-sm transition-transform duration-700 group-hover:rotate-[135deg]" />
-            <div className="absolute inset-2.5 rotate-45 rounded-sm bg-electric transition-transform duration-700 group-hover:rotate-[135deg]" />
-          </div>
           <span className="font-display text-lg font-bold tracking-tight text-electric">
             AbstractArt<span className="text-plasma">.</span>
           </span>
@@ -48,10 +62,10 @@ export default function Navbar() {
             <a
               key={link.href}
               href={link.href}
-              className="group relative px-4 py-2 font-mono text-sm text-chrome transition-colors duration-300 hover:text-electric"
+              className="group relative px-4 py-2 font-mono text-sm text-electric transition-colors duration-300 hover:text-electric"
             >
               {link.label}
-              <span className="absolute bottom-0 left-1/2 h-px w-0 -translate-x-1/2 bg-plasma transition-all duration-300 group-hover:w-1/2" />
+              <span className="absolute bottom-0 left-1/2 h-px w-0 -translate-x-1/2 bg-plasma transition-all duration-300 group-hover:w-10/12" />
             </a>
           ))}
         </div>

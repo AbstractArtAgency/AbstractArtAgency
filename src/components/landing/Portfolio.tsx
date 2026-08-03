@@ -35,9 +35,18 @@ const projects = [
 export default function Portfolio() {
   const targetRef = useRef<HTMLElement | null>(null);
   const items = [
-    { type: "intro", title: "Zobacz nasze prace", subtitle: "Przewiń, aby zobaczyć wybrane realizacje — każde w osobnym 'oknie'" },
+    {
+      type: "intro",
+      title: "Zobacz nasze prace",
+      subtitle:
+        "Przewiń, aby zobaczyć wybrane realizacje — każde w osobnym 'oknie'",
+    },
     ...projects,
-    { type: "outro", title: "Chcesz więcej?", subtitle: "Skontaktuj się z nami, aby omówić projekt" },
+    {
+      type: "outro",
+      title: "Chcesz więcej?",
+      subtitle: "Skontaktuj się z nami, aby omówić projekt",
+    },
   ];
   const count = items.length;
 
@@ -48,13 +57,16 @@ export default function Portfolio() {
     if (!el) return;
 
     const nav = document.querySelector("nav");
-    const navHeight = nav ? (nav as HTMLElement).getBoundingClientRect().height : 0;
+    const navHeight = nav
+      ? (nav as HTMLElement).getBoundingClientRect().height
+      : 0;
 
     const calc = () => {
       const rect = el.getBoundingClientRect();
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop || 0;
-      const start = rect.top + scrollTop - navHeight; // when top of section meets bottom of header
-      const span = window.innerHeight * (count + 0.8); // allow space for horizontal travel + final expand
+      const scrollTop =
+        window.pageYOffset || document.documentElement.scrollTop || 0;
+      const start = rect.top + scrollTop - navHeight + 100;
+      const span = window.innerHeight * (count + 0.8); // horizontal travel + final expand hold
       const end = start + span;
       return { start, end };
     };
@@ -83,63 +95,102 @@ export default function Portfolio() {
   }, [count, progress]);
 
   // Combined scale: full -> small -> small -> full
-  const scale = useTransform(progress, [0, 0.12, 0.88, 1], [1, 0.7, 0.7, 1]);
-  const frameOpacity = useTransform(progress, [0, 0.12, 0.88, 1], [0, 1, 1, 0]);
-  const translateX = useTransform(progress, [0.12, 0.88], ["0%", `${-(count - 1) * 100}%`]);
+  const scale = useTransform(progress, [0, 0.12, 0.82, 0.94], [1, 0.7, 0.7, 1]);
+  const frameOpacity = useTransform(
+    progress,
+    [0, 0.12, 0.88, 0.98],
+    [0, 1, 1, 0],
+  );
+  const translateX = useTransform(
+    progress,
+    [0.12, 0.78],
+    ["0%", `${-(count - 1) * 100}%`],
+  );
 
   return (
-    <section id="work" ref={targetRef} className="relative h-[500vh] bg-transparent">
-      <div className="sticky top-0 z-10 h-screen">
-        <div className="absolute inset-x-0 top-6 z-20 px-6 pt-6">
+    <section
+      id="work"
+      ref={targetRef}
+      className="relative h-[740vh] bg-transparent"
+    >
+      <div className="sticky top-[var(--header-height,72px)] z-10 h-[calc(100vh-var(--header-height,72px))]">
+        {/* ⬇️ DOSTOSUJ: zmień top-0 aby sekcja zatrzymywała się dalej poniżej */}
+        {/* Użyj top-8, top-16, top-24 itp aby zatrzymała się DALEJ w dół */}
+        {/* Im wyższa wartość top, tym dalej będzie się zatrzymywać */}
+        {/* <div className="relative inset-x-0 top-24 z-20 px-6 pt-6">
           <div className="mx-auto max-w-7xl">
             <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-plasma">/ 03 - Selected Work</span>
             <h2 className="mt-4 font-display text-4xl font-bold tracking-tight text-electric md:text-6xl">The <span className="text-mask-gradient">evidence</span></h2>
           </div>
-        </div>
+        </div> */}
 
         <div className="flex h-full items-center justify-center">
-          <div className="w-full h-full flex items-center justify-center">
-            <motion.div style={{ scale }} className="relative w-screen h-screen flex items-center justify-center">
+          <div className="w-full h-full flex items-center justify-center overflow-hidden">
+            <motion.div
+              style={{ scale }}
+              className="relative w-screen h-[calc(100vh-var(--header-height,72px))] flex items-center justify-center"
+            >
               {/* sliding horizontal strip of panels */}
-              <div className="absolute inset-0 overflow-hidden">
-                <motion.div style={{ x: translateX }} className="flex h-full will-change-transform">
+              <div className="absolute inset-0 ">
+                <motion.div
+                  style={{ x: translateX }}
+                  className="flex gap-20 h-full will-change-transform"
+                >
                   {items.map((it, idx) => (
-                    <div key={idx} className="flex-shrink-0 w-screen h-full flex items-center justify-center">
+                    <div
+                      key={idx}
+                      className="flex-shrink-0 w-full h-full flex items-center justify-center bg-red-600 rounded-2xl"
+                    >
                       {/* apple-like window */}
-                      <div className="relative w-[86vw] h-[78vh] rounded-2xl overflow-hidden bg-white border border-white/5 shadow-md">
-                        {/* titlebar */}
-                        <div className="absolute top-0 left-0 right-0 flex items-center gap-3 px-4 py-3">
-                          <span className="h-3 w-3 rounded-full bg-red-500/80" />
-                          <span className="h-3 w-3 rounded-full bg-yellow-500/80" />
-                          <span className="h-3 w-3 rounded-full bg-green-500/80" />
-                          <div className="ml-4 text-xs font-mono text-chrome">AbstractArt Browser</div>
-                        </div>
 
-                        {/* content */}
-                        <div className="absolute inset-0 p-8 flex items-center justify-center">
-                          {it.type === "intro" || it.type === "outro" ? (
-                            <div className="text-center max-w-xl">
-                              <h3 className="font-display text-4xl font-bold text-electric">{it.title}</h3>
-                              <p className="mt-3 text-chrome">{it.subtitle}</p>
+                      {/* content */}
+                      <div className="relative inset-0 p-8 flex items-center justify-center">
+                        {it.type === "intro" || it.type === "outro" ? (
+                          <div className="text-center max-w-xl">
+                            <h3 className="font-display text-4xl font-bold text-electric">
+                              {it.title}
+                            </h3>
+                            <p className="mt-3 text-chrome">{it.subtitle}</p>
+                          </div>
+                        ) : (
+                          <div className="w-full h-full flex flex-col">
+                            <div className="flex-1 relative rounded-md overflow-hidden">
+                              <Image
+                                src={it.image}
+                                alt={it.title}
+                                fill
+                                className="object-cover"
+                              />
                             </div>
-                          ) : (
-                            <div className="w-full h-full flex flex-col">
-                              <div className="flex-1 relative rounded-md overflow-hidden">
-                                <Image src={it.image} alt={it.title} fill className="object-cover" />
-                              </div>
-                              <div className="mt-4">
-                                <h4 className="font-display text-2xl text-electric">{it.title}</h4>
-                                <p className="text-chrome mt-2">{it.desc}</p>
-                              </div>
+                            <div className="mt-4">
+                              <h4 className="font-display text-2xl text-electric">
+                                {it.title}
+                              </h4>
+                              <p className="text-chrome mt-2">{it.desc}</p>
                             </div>
-                          )}
-                        </div>
-
-                        {/* frame border (fades in) */}
-                        <motion.div style={{ opacity: frameOpacity }} className="pointer-events-none absolute inset-0 flex items-center justify-center">
-                          <div className="w-[92%] h-[92%] rounded-2xl border-2 border-white/10" />
-                        </motion.div>
+                          </div>
+                        )}
                       </div>
+
+                      {/* frame border (fades in) */}
+                      <motion.div
+                        style={{ opacity: frameOpacity }}
+                        className="pointer-events-none absolute inset-0 flex items-center justify-center w-full"
+                      >
+                        <div className="w-full h-full rounded-2xl border-2 border-white/10">
+                          <div className="relative w-full h-full rounded-2xl overflow-hidden border border-white/5 shadow-md">
+                            {/* titlebar */}
+                            <div className="absolute top-0 left-0 right-0 flex items-center gap-3 px-4 py-3 bg-white">
+                              <span className="h-3 w-3 rounded-full bg-red-500/80" />
+                              <span className="h-3 w-3 rounded-full bg-yellow-500/80" />
+                              <span className="h-3 w-3 rounded-full bg-green-500/80" />
+                              <div className="ml-4 text-xs font-mono text-chrome">
+                                AbstractArt Browser
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
                     </div>
                   ))}
                 </motion.div>
