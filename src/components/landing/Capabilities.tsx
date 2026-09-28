@@ -1,109 +1,149 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { BarChart3, Boxes, BrainCircuit, Sparkles, Wind, Zap } from "lucide-react";
-
-const capabilities = [
-  {
-    icon: Boxes,
-    title: "WebGL & 3D Engines",
-    desc: "We sculpt light into geometry. Real-time rendering, particle systems, and physics simulations that run at 60fps in any browser.",
-    code: 'import * as THREE from "three"\nnew Engine({ realtime: true })',
-  },
-  {
-    icon: Sparkles,
-    title: "Generative Systems",
-    desc: "Algorithms that paint themselves. Procedural content, parametric design, and self-evolving interfaces that never repeat.",
-    code: "generate({ seed: Math.random() })\n// -> infinite variations",
-  },
-  {
-    icon: Wind,
-    title: "Motion Architecture",
-    desc: "Choreographed physics. Every transition is a designed experience - spring-based, buttery, and purposeful.",
-    code: "animate({ tension: 170, friction: 26 })",
-  },
-  {
-    icon: BarChart3,
-    title: "Data Visualization",
-    desc: "Chaos, rendered legible. We transform millions of data points into living, breathing visual narratives.",
-    code: "render(data, { live: true, depth: 3 })",
-  },
-  {
-    icon: Zap,
-    title: "Edge Computing",
-    desc: "Logic at the speed of light. Distributed systems, serverless architecture, and sub-millisecond responses globally.",
-    code: 'edge.deploy({ regions: "all" })',
-  },
-  {
-    icon: BrainCircuit,
-    title: "AI Integration",
-    desc: "Neural orchestration. We embed intelligence into every pixel - predictive, adaptive, and eerily human.",
-    code: 'neural.connect({ model: "v4" })',
-  },
-];
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Minus, Plus } from "lucide-react";
+import { capabilities } from "@/src/lib/capabilities";
 
 export default function Capabilities() {
-  return (
-    <section id="capabilities" className="relative overflow-hidden bg-void py-32">
-      <div className="bg-grid pointer-events-none absolute inset-0 opacity-10" />
+  const [openIndex, setOpenIndex] = useState(-1);
 
-      <div className="relative mx-auto max-w-7xl px-6">
+  return (
+    <section id="capabilities" className="relative overflow-hidden bg-cream py-32">
+      <div className="bg-grid pointer-events-none absolute inset-0 opacity-40" />
+
+      <div className="relative w-full px-6 md:px-12">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.7 }}
-          className="mb-20"
+          className="mb-16 flex flex-col justify-between gap-6 md:flex-row md:items-end"
         >
-          <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-plasma">
-            / 01 - Capabilities
-          </span>
-          <h2 className="mt-4 max-w-3xl font-display text-4xl font-bold tracking-tight text-electric md:text-6xl">
-            Complexity is our <span className="text-mask-gradient">playground</span>
-          </h2>
-          <p className="mt-6 max-w-2xl font-mono text-lg text-chrome">
-            Every project is a descent into the unknown. We bring order to chaos,
-            structure to imagination, and architecture to the impossible.
-          </p>
+          <div>
+            <h2 className="mt-4 max-w-2xl font-display text-4xl font-bold tracking-tight text-ink md:text-6xl">
+              Sprawdź, co możemy dla <span className="text-ember font-accent italic tracking-wide">Ciebie</span> zrobić<span className="text-ember">!</span>
+            </h2>
+          </div>
+          <a
+            href="/contact"
+            className="group relative inline-flex shrink-0 items-center gap-2 overflow-hidden rounded-lg bg-ink px-6 py-3 font-mono text-sm text-cream"
+          >
+            <span className="absolute inset-0 origin-left scale-x-0 bg-ember transition-transform duration-500 ease-out group-hover:scale-x-100" />
+            <span className="relative z-10">Umów rozmowę →</span>
+          </a>
         </motion.div>
 
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div
+          className="border-t border-line"
+          onMouseLeave={() => setOpenIndex(-1)}
+        >
           {capabilities.map((capability, index) => {
-            const Icon = capability.icon;
+            const isOpen = openIndex === index;
 
             return (
               <motion.div
                 key={capability.title}
-                initial={{ opacity: 0, y: 40 }}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.5, delay: index * 0.08 }}
-                className="glass-panel group relative cursor-default rounded-2xl p-8 transition-all duration-500 hover:-translate-y-1"
+                transition={{ duration: 0.5, delay: index * 0.05 }}
+                className="border-b border-line"
               >
-                <div
-                  className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-                  style={{
-                    boxShadow:
-                      "0 0 40px rgba(139,92,246,0.15), inset 0 0 30px rgba(139,92,246,0.05)",
-                  }}
-                />
+                <button
+                  type="button"
+                  onMouseEnter={() => setOpenIndex(index)}
+                  onClick={() => setOpenIndex(isOpen ? -1 : index)}
+                  className="group flex w-full items-center gap-6 px-4 py-6 text-left md:gap-10 md:px-8 md:py-8"
+                >
+                  <span
+                    className="select-none font-display text-[3.2rem] font-bold leading-none text-transparent transition-all duration-300 sm:text-[4.5rem] md:text-[6rem]"
+                    style={{
+                      WebkitTextStroke: isOpen
+                        ? "1.5px #DE1F1A"
+                        : "1.5px rgba(26,26,26,0.18)",
+                    }}
+                  >
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
 
-                <div className="relative">
-                  <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-xl border border-plasma/20 bg-plasma/10 transition-all duration-500 group-hover:border-plasma/40 group-hover:bg-plasma/20">
-                    <Icon className="h-6 w-6 text-plasma" />
-                  </div>
-
-                  <h3 className="mb-3 font-display text-xl font-bold text-electric">
+                  <h3
+                    className={`min-w-0 flex-1 font-display text-xl font-bold uppercase tracking-tight transition-colors duration-300 sm:text-2xl md:text-3xl ${
+                      isOpen ? "text-ink" : "text-stone group-hover:text-ink-soft"
+                    }`}
+                  >
                     {capability.title}
                   </h3>
-                  <p className="mb-6 text-sm leading-relaxed text-chrome">
-                    {capability.desc}
-                  </p>
 
-                  <div className="overflow-x-auto rounded-lg border border-white/5 bg-void/60 p-3 font-mono text-[10px] leading-relaxed text-plasma/50">
-                    <pre className="whitespace-pre">{capability.code}</pre>
-                  </div>
-                </div>
+                  <span
+                    className={`flex h-9 w-9 shrink-0 items-center justify-center border transition-all duration-300 ${
+                      isOpen
+                        ? "border-ember bg-ember text-cream"
+                        : "border-line text-stone group-hover:border-ember/40 group-hover:text-ink"
+                    }`}
+                  >
+                    {isOpen ? (
+                      <Minus className="h-4 w-4" />
+                    ) : (
+                      <Plus className="h-4 w-4" />
+                    )}
+                  </span>
+                </button>
+
+                <AnimatePresence initial={false}>
+                  {isOpen && (
+                    <motion.div
+                      initial={{ height: 0 }}
+                      animate={{ height: "auto" }}
+                      exit={{ height: 0 }}
+                      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                      className="overflow-hidden"
+                    >
+                      <motion.div
+                        initial={{ clipPath: "inset(0 0 0 100%)" }}
+                        animate={{ clipPath: "inset(0 0 0 0%)" }}
+                        exit={{ clipPath: "inset(0 0 0 100%)" }}
+                        transition={{ duration: 0.55, ease: [0.65, 0, 0.35, 1] }}
+                        className="relative left-1/2 w-screen -translate-x-1/2"
+                        style={{ backgroundColor: "#de1f1a" }}
+                      >
+                        <motion.div
+                          initial={{ opacity: 0, y: 12 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 12 }}
+                          transition={{ duration: 0.35, delay: 0.15 }}
+                          className="mx-auto max-w-7xl px-6 py-8 md:px-12 md:py-10"
+                        >
+                          <p className="max-w-xl text-sm leading-relaxed text-cream/90 md:text-2xl font-medium">
+                            {capability.desc}
+                          </p>
+                          <div className="mt-6 grid grid-cols-2 gap-x-8 gap-y-5 sm:grid-cols-3">
+                            {capability.meta.map((line) => {
+                              const [label, value] = line.split(": ");
+                              return (
+                                <div key={line}>
+                                  <p className="font-mono italic font-bold text-[10px] uppercase tracking-[0.2em] text-cream/55">
+                                    {label}
+                                  </p>
+                                  <p className="mt-1.5 font-display text-base font-black leading-snug text-cream md:text-lg">
+                                    {value}
+                                  </p>
+                                </div>
+                              );
+                            })}
+                          </div>
+                          <a
+                            href={`/capabilities/${capability.slug}`}
+                            className="group/link relative mt-16 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-cream"
+                          >
+                            Zobacz szczegóły →
+                            <span className="absolute -bottom-1 left-1/2 h-px w-0 -translate-x-1/2 bg-cream transition-all duration-300 group-hover/link:w-full" />
+                          </a>
+                        </motion.div>
+                      </motion.div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </motion.div>
             );
           })}

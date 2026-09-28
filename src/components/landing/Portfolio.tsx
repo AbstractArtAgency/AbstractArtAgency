@@ -2,7 +2,6 @@
 
 import { useRef, useEffect, useState } from "react";
 import { motion, useMotionValue, useTransform } from "framer-motion";
-import Image from "next/image";
 
 type PortfolioItem =
   | {
@@ -13,39 +12,24 @@ type PortfolioItem =
   | {
       type: "project";
       title: string;
-      category: string;
-      desc: string;
-      image: string;
-      tags: string[];
+      url: string;
     };
 
 const projects: PortfolioItem[] = [
   {
     type: "project",
-    title: "Quantum Commerce",
-    category: "E-Commerce Platform",
-    desc: "A WebGL-powered shopping experience where products orbit in 3D space. Built for a luxury brand with 10M+ monthly visitors.",
-    image:
-      "https://media.base44.com/images/public/6a60bebe0fa5491af08b0f4e/a218b0a37_generated_230c4fff.png",
-    tags: ["WebGL", "React", "Edge"],
+    title: "Jacob Przyciasa Portfolio",
+    url: "https://jacobprzyciasa.com/",
   },
   {
     type: "project",
-    title: "Neural Canvas",
-    category: "AI Creative Suite",
-    desc: "Real-time generative art platform powered by neural networks. Users paint with algorithms - every stroke is unique.",
-    image:
-      "https://media.base44.com/images/public/6a60bebe0fa5491af08b0f4e/62c956fed_generated_e6a3d272.png",
-    tags: ["AI", "Canvas", "Realtime"],
+    title: "RN Serwis Elektroniki",
+    url: "https://www.rnserwiselektroniki.pl/",
   },
   {
     type: "project",
-    title: "Prism Protocol",
-    category: "Web3 Application",
-    desc: "A decentralized marketplace with glassmorphic 3D asset previews and sub-second transaction rendering.",
-    image:
-      "https://media.base44.com/images/public/6a60bebe0fa5491af08b0f4e/5cf3d383d_generated_be1bc845.png",
-    tags: ["Web3", "Three.js", "Solidity"],
+    title: "Time2run",
+    url: "https://www.time2run.pl/",
   },
 ];
 
@@ -56,59 +40,66 @@ const isTextSlide = (
 
 export default function Portfolio() {
   const targetRef = useRef<HTMLElement | null>(null);
+  const stripRef = useRef<HTMLDivElement | null>(null);
+  const firstItemRef = useRef<HTMLDivElement | null>(null);
+
   const items: PortfolioItem[] = [
     {
       type: "intro",
-      title: "Zobacz nasze prace",
+      title: "Zobacz nasze realizacje",
       subtitle:
-        "Przewiń, aby zobaczyć wybrane realizacje — każde w osobnym 'oknie'",
+        "Odkryj, jak pomagamy markom osiągać sukces w internecie.",
     },
     ...projects,
     {
       type: "outro",
-      title: "Chcesz więcej?",
-      subtitle: "Skontaktuj się z nami, aby omówić projekt",
+      title: "Myślisz, że możemy Ci pomóc?",
+      subtitle: "Napisz do nas, a na pewno wymyślimy coś ciekawego!",
     },
   ];
   const count = items.length;
 
   const progress = useMotionValue(0);
-  const [translateXEnd, setTranslateXEnd] = useState(() => {
-    if (typeof window === "undefined") {
-      return "0px";
-    }
-    const rootFontSize = parseFloat(
-      getComputedStyle(document.documentElement).fontSize,
-    );
-    const gapPx = (rootFontSize || 16) * 5;
-    return `${-((count - 1) * window.innerWidth + (count - 1) * gapPx)}px`;
-  });
+  const [translateXEnd, setTranslateXEnd] = useState("0px");
 
   useEffect(() => {
     const el = targetRef.current;
     if (!el) return;
 
-    const nav = document.querySelector("nav");
-    const navHeight = nav
-      ? (nav as HTMLElement).getBoundingClientRect().height
-      : 0;
+    const getNavHeight = () => {
+      const raw = getComputedStyle(document.documentElement).getPropertyValue(
+        "--header-height",
+      );
+      const parsed = parseFloat(raw);
+      return Number.isFinite(parsed) ? parsed : 0;
+    };
 
     const calc = () => {
       const rect = el.getBoundingClientRect();
       const scrollTop =
         window.pageYOffset || document.documentElement.scrollTop || 0;
-      const start = rect.top + scrollTop - navHeight + 100;
+      const start = rect.top + scrollTop - getNavHeight() + 100;
       const span = window.innerHeight * (count + 0.8); // horizontal travel + final expand hold
       const end = start + span;
       return { start, end };
     };
 
     const updateTranslateXEnd = () => {
-      const rootFontSize = parseFloat(
-        getComputedStyle(document.documentElement).fontSize,
-      );
-      const gapPx = (rootFontSize || 16) * 5;
-      const target = -((count - 1) * window.innerWidth + (count - 1) * gapPx);
+      const stripEl = stripRef.current;
+      const itemEl = firstItemRef.current;
+      if (!stripEl || !itemEl) return;
+
+      // Mierzymy REALNĄ szerokość elementu i gap z DOM-u,
+      // zamiast zakładać window.innerWidth (które zawiera scrollbar
+      // i nie odpowiada faktycznej szerokości elementu z w-full).
+      const computedGap = parseFloat(
+        getComputedStyle(stripEl).columnGap ||
+          getComputedStyle(stripEl).gap ||
+          "0",
+      ) || 0;
+      const itemWidth = itemEl.getBoundingClientRect().width;
+
+      const target = -((count - 1) * itemWidth + (count - 1) * computedGap);
       setTranslateXEnd(`${target}px`);
     };
 
@@ -155,79 +146,70 @@ export default function Portfolio() {
       ref={targetRef}
       className="relative h-[740vh] bg-transparent"
     >
-      <div className="sticky top-[var(--header-height,72px)] z-10 h-[calc(100vh-var(--header-height,72px))]">
-        {/* ⬇️ DOSTOSUJ: zmień top-0 aby sekcja zatrzymywała się dalej poniżej */}
-        {/* Użyj top-8, top-16, top-24 itp aby zatrzymała się DALEJ w dół */}
-        {/* Im wyższa wartość top, tym dalej będzie się zatrzymywać */}
-        {/* <div className="relative inset-x-0 top-24 z-20 px-6 pt-6">
-          <div className="mx-auto max-w-7xl">
-            <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-plasma">/ 03 - Selected Work</span>
-            <h2 className="mt-4 font-display text-4xl font-bold tracking-tight text-electric md:text-6xl">The <span className="text-mask-gradient">evidence</span></h2>
-          </div>
-        </div> */}
-
+      <div className="sticky top-[var(--header-height,96px)] z-10 h-[calc(100vh-var(--header-height,96px))]">
         <div className="flex h-full items-center justify-center">
           <div className="w-full h-full flex items-center justify-center overflow-hidden">
             <motion.div
               style={{ scale }}
-              className="relative w-screen h-[calc(100vh-var(--header-height,72px))] flex items-center justify-center"
+              className="relative w-screen h-[calc(100vh-var(--header-height,96px))] flex items-center justify-center"
             >
               {/* sliding horizontal strip of panels */}
               <div className="absolute inset-0 ">
                 <motion.div
+                  ref={stripRef}
                   style={{ x: translateX }}
                   className="flex gap-20 h-full will-change-transform"
                 >
                   {items.map((it, idx) => (
                     <div
                       key={idx}
-                      className="flex-shrink-0 w-full h-full flex items-center justify-center bg-red-600 rounded-2xl"
+                      ref={idx === 0 ? firstItemRef : undefined}
+                      className="relative flex-shrink-0 w-full h-full flex items-center justify-center rounded-2xl"
                     >
-                      {/* apple-like window */}
-
                       {/* content */}
-                      <div className="relative inset-0 p-8 flex items-center justify-center">
-                        {isTextSlide(it) ? (
+                      {isTextSlide(it) ? (
+                        <div className="relative inset-0 h-full p-8 flex items-center justify-center">
                           <div className="text-center max-w-xl">
-                            <h3 className="font-display text-4xl font-bold text-electric">
+                            <h3 className="mt-4 font-display text-4xl font-bold text-ink">
                               {it.title}
                             </h3>
-                            <p className="mt-3 text-chrome">{it.subtitle}</p>
+                            <p className="mt-3 text-ink-soft">{it.subtitle}</p>
                           </div>
-                        ) : (
-                          <div className="w-full h-full flex flex-col">
-                            <div className="flex-1 relative rounded-md overflow-hidden">
-                              <Image
-                                src={it.image}
-                                alt={it.title}
-                                fill
-                                className="object-cover"
-                              />
-                            </div>
-                            <div className="mt-4">
-                              <h4 className="font-display text-2xl text-electric">
-                                {it.title}
-                              </h4>
-                              <p className="text-chrome mt-2">{it.desc}</p>
-                            </div>
-                          </div>
-                        )}
-                      </div>
+                        </div>
+                      ) : (
+                        <div className="absolute inset-0 rounded-2xl overflow-hidden bg-paper">
+                          <a
+                            href={it.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={`Otwórz ${it.title}`}
+                            className="absolute inset-0 z-10"
+                          />
+                          <iframe
+                            src={it.url}
+                            title={it.title}
+                            loading="lazy"
+                            className="absolute inset-0 w-full h-full border-0 pointer-events-none"
+                          />
+                        </div>
+                      )}
 
-                      {/* frame border (fades in) */}
+                      {/* frame border (fades in) — na KAŻDYM elemencie, jak okno macOS */}
                       <motion.div
                         style={{ opacity: frameOpacity }}
                         className="pointer-events-none absolute inset-0 flex items-center justify-center w-full"
                       >
-                        <div className="w-full h-full rounded-2xl border-2 border-white/10">
-                          <div className="relative w-full h-full rounded-2xl overflow-hidden border border-white/5 shadow-md">
+                        <div className="w-full h-full rounded-2xl border-2 border-ink/10">
+                          <div className="relative w-full h-full rounded-2xl overflow-hidden border border-line shadow-lg">
                             {/* titlebar */}
-                            <div className="absolute top-0 left-0 right-0 flex items-center gap-3 px-4 py-3 bg-white">
-                              <span className="h-3 w-3 rounded-full bg-red-500/80" />
-                              <span className="h-3 w-3 rounded-full bg-yellow-500/80" />
-                              <span className="h-3 w-3 rounded-full bg-green-500/80" />
-                              <div className="ml-4 text-xs font-mono text-chrome">
-                                AbstractArt Browser
+                            <div className="absolute top-0 left-0 right-0 flex items-center gap-3 px-4 py-3 bg-paper border-b border-line">
+                              <span className="h-3 w-3 rounded-full bg-[#ff5f57]" />
+                              <span className="h-3 w-3 rounded-full bg-[#febc2e]" />
+                              <span className="h-3 w-3 rounded-full bg-[#28c840]" />
+                              <div className="mx-auto flex items-center gap-1.5 rounded-md bg-cream px-3 py-1 font-mono text-[10px] text-stone">
+                                {it.type === "project"
+                                  ? it.url.replace(/^https?:\/\//, "").replace(/\/$/, "")
+                                  : "abstractart.pl"}
                               </div>
                             </div>
                           </div>

@@ -1,113 +1,139 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { ArrowRight, Sparkle } from "lucide-react";
 import ParticleBackground from "./ParticleBackground";
+
+
+const breadcrumbItems = [
+  "STRONY WWW",
+  "SEO",
+  "KAMPANIE ADS",
+  "BRANDING",
+  "E-COMMERCE",
+  "SOCIAL MEDIA",
+];
+
+const creditItems = [
+  "STRONY WWW",
+  "KAMPANIE ADS",
+  "BRANDING",
+  "SOCIAL MEDIA",
+];
 
 export default function Hero() {
   return (
     <section
       id="top"
-      className="relative flex min-h-screen items-center justify-center overflow-hidden bg-void"
+      className="relative overflow-hidden bg-cream min-h-screen flex items-center py-32"
     >
       <ParticleBackground />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-void/40 via-transparent to-void" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-cream/10 via-transparent to-cream" />
 
-      <div className="bg-grid pointer-events-none absolute inset-0 opacity-30" />
-
-      <div className="relative z-10 mx-auto max-w-6xl px-6 text-center">
+      <div className="relative z-10 mx-auto w-full max-w-6xl px-6">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.6 }}
-          className="mb-10 inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 backdrop-blur-sm"
+          transition={{ duration: 0.6 }}
+          className="flex items-start justify-between font-mono text-[11px] uppercase tracking-[0.25em]"
         >
-          <span className="animate-glow-pulse h-1.5 w-1.5 rounded-full bg-plasma" />
-          <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-chrome">
-            Digital Architecture Studio
-          </span>
-        </motion.div>
-
-        <motion.h1
-          initial={{ opacity: 0, scale: 0.92 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.5, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-          className="font-display text-[16vw] font-black leading-[0.85] tracking-tight md:text-[13vw] lg:text-[12vw]"
-        >
-          <span className="text-mask-gradient text-glow block">MANIFEST</span>
-        </motion.h1>
-
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8, duration: 0.6 }}
-          className="mx-auto mt-8 max-w-2xl font-mono text-lg leading-relaxed text-chrome md:text-xl"
-        >
-          We engineer impossible digital experiences - where raw code transmutes into
-          living, breathing dimensions. No complexity is beyond our reach.
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1, duration: 0.6 }}
-          className="mt-12 flex flex-col justify-center gap-4 sm:flex-row"
-        >
-          <a
-            href="#contact"
-            className="group relative overflow-hidden rounded-full px-8 py-4 font-medium transition-all duration-300 hover:scale-105 hover:shadow-[0_0_50px_rgba(139,92,246,0.4)]"
-          >
-            <div className="animate-gradient-shift absolute inset-0 bg-gradient-to-r from-plasma via-indigo-500 to-cyan-400" />
-            <span className="relative z-10 font-mono text-sm tracking-wide text-white">
-              Begin the Transmission
-            </span>
-          </a>
-          <a
-            href="#work"
-            className="rounded-full border border-white/15 px-8 py-4 font-mono text-sm tracking-wide text-electric transition-all duration-300 hover:border-plasma/50 hover:bg-white/5"
-          >
-            View the Codex
-          </a>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.3, duration: 0.8 }}
-          className="absolute left-0 top-1/10 hidden select-none text-left font-mono text-[10px] leading-relaxed text-plasma/30 lg:block"
-        >
-          <div>{"const manifest = (idea) =>"}</div>
-          <div className="pl-3">{"{"}</div>
-          <div className="pl-6">{"return reality(idea)"}</div>
-          <div className="pl-3">{"}"}</div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5, duration: 0.8 }}
-          className="absolute right-0 bottom-1/10 hidden select-none text-right font-mono text-[10px] leading-relaxed text-cyan/30 lg:block"
-        >
-          <div>{"function transcend() {"}</div>
-          <div className="pr-3">{"await architect.execute()"}</div>
-          <div>{"}"}</div>
-        </motion.div>
-      </div>
-
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.8, duration: 0.6 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2"
-      >
-        <div className="flex flex-col items-center gap-3">
-          <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-chrome">
-            Scroll
-          </span>
-          <div className="h-12 w-px overflow-hidden bg-gradient-to-b from-plasma to-transparent">
-            <div className="animate-scroll-line h-full w-full bg-electric" />
+          <div>
+            <span className="block font-bold text-ink">AbstractArt.pl</span>
           </div>
+          <div className="text-right">
+            <span className="block font-bold text-ink">10+ marek</span>
+          </div>
+        </motion.div>
+
+        <div className="mt-14 text-center sm:mt-20">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="font-display text-[12vw] font-black uppercase leading-[0.92] tracking-tight text-ink sm:text-7xl lg:text-8xl"
+          >
+            Tworzymy marki
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="text-ember font-accent italic text-[12vw] font-normal uppercase leading-[0.92] tracking-tight sm:gap-5 sm:text-7xl lg:text-9xl"
+          >
+            Niemożliwe
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="font-display text-[12vw] font-black uppercase leading-[0.92] tracking-tight text-ink sm:text-7xl lg:text-8xl"
+          >
+            do zignorowania.
+          </motion.div>
+
+          {/* <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.55, duration: 0.6 }}
+            className="mx-auto mt-8 flex w-fit items-center justify-center border border-line px-5 py-2 font-mono text-xs uppercase tracking-[0.2em] text-ink-soft"
+          >
+            <p>WWW · Ads · Social media</p>
+          </motion.div> */}
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.95, duration: 0.6 }}
+            className="mt-16 flex flex-wrap items-center justify-center gap-x-4 gap-y-3 font-mono text-xs uppercase tracking-[0.15em] text-ink-soft sm:gap-x-6"
+          >
+            {creditItems.map((item, i) => (
+              <span key={item} className="flex items-center gap-x-4 sm:gap-x-6">
+                {item}
+                {i < creditItems.length - 1 && (
+                  <span className="text-ember">—</span>
+                )}
+              </span>
+            ))}
+          </motion.div>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.65, duration: 0.6 }}
+            className="mx-auto mt-16 max-w-xl text-lg leading-relaxed text-ink-soft md:text-xl"
+          >
+            Pozwól się znaleźć tysiącom użytkowników, którzy szukają tego, co oferujesz. Niech Twoja marka stanie się nie do przeoczenia.
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8, duration: 0.6 }}
+            className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row"
+          >
+            <a
+              href="/realisations"
+              className="group relative overflow-hidden rounded-lg bg-ink px-8 py-4 font-mono text-sm text-cream transition-transform duration-300"
+            >
+              <span className="absolute inset-0 origin-left scale-x-0 bg-ember transition-transform duration-500 ease-out group-hover:scale-x-100" />
+              <span className="relative z-10">Zobacz realizacje →</span>
+            </a>
+            <a
+              href="/contact"
+              className="group relative flex items-center justify-center gap-2 overflow-hidden rounded-lg border border-line bg-paper px-8 py-4 font-mono text-sm text-ink transition-colors duration-500 hover:border-ember"
+            >
+              <span className="absolute inset-0 origin-left scale-x-0 bg-ember transition-transform duration-500 ease-out group-hover:scale-x-100" />
+              <span className="relative z-10 transition-colors duration-500 group-hover:text-cream">
+                Umów rozmowę
+              </span>
+            </a>
+          </motion.div>
+
+          
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 }

@@ -5,17 +5,17 @@ import Hero from "@/src/components/landing/Hero";
 import Navbar from "@/src/components/landing/Navbar";
 import Portfolio from "@/src/components/landing/Portfolio";
 import Process from "@/src/components/landing/Process";
-import Stats from "@/src/components/landing/Stats";
+import Testimonials from "@/src/components/landing/Testimonials";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-void">
+    <main className="min-h-screen bg-cream">
       <Navbar />
       <Hero />
       <Capabilities />
       <Process />
       <Portfolio />
-      <Stats />
+      <Testimonials />
       <Contact />
       <Footer />
     </main>
