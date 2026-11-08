@@ -48,13 +48,13 @@ export default function Portfolio() {
       type: "intro",
       title: "Zobacz nasze realizacje",
       subtitle:
-        "Odkryj, jak pomagamy markom osiągać sukces w internecie.",
+        "",
     },
     ...projects,
     {
       type: "outro",
-      title: "Myślisz, że możemy Ci pomóc?",
-      subtitle: "Napisz do nas, a na pewno wymyślimy coś ciekawego!",
+      title: "Interesują Cię social media?",
+      subtitle: "",
     },
   ];
   const count = items.length;
@@ -144,40 +144,41 @@ export default function Portfolio() {
     <section
       id="work"
       ref={targetRef}
-      className="relative h-[740vh] bg-transparent"
+      className="relative h-[740vh] border-t border-coal bg-linen bg-paper-grain bg-size-[256px_256px] text-coal bg-fixed"
     >
-      <div className="sticky top-[var(--header-height,96px)] z-10 h-[calc(100vh-var(--header-height,96px))]">
+      {/* przypięte tło — tekstura papieru stoi w miejscu, gdy sekcja jest przewijana */}
+      <div className="sticky top-[var(--header-height,96px)] z-10 h-[calc(100svh-var(--header-height,96px))] bg-linen bg-paper-grain bg-size-[256px_256px] text-coal">
         <div className="flex h-full items-center justify-center">
           <div className="w-full h-full flex items-center justify-center overflow-hidden">
             <motion.div
               style={{ scale }}
-              className="relative w-screen h-[calc(100vh-var(--header-height,96px))] flex items-center justify-center"
+              className="relative flex h-[calc(100svh-var(--header-height,96px))] w-screen items-center justify-center"
             >
               {/* sliding horizontal strip of panels */}
               <div className="absolute inset-0 ">
                 <motion.div
                   ref={stripRef}
                   style={{ x: translateX }}
-                  className="flex gap-20 h-full will-change-transform"
+                  className="flex h-full gap-8 will-change-transform md:gap-20"
                 >
                   {items.map((it, idx) => (
                     <div
                       key={idx}
                       ref={idx === 0 ? firstItemRef : undefined}
-                      className="relative flex-shrink-0 w-full h-full flex items-center justify-center rounded-2xl"
+                      className="relative flex h-full w-full shrink-0 items-center justify-center rounded-[18px]"
                     >
                       {/* content */}
                       {isTextSlide(it) ? (
-                        <div className="relative inset-0 h-full p-8 flex items-center justify-center">
-                          <div className="text-center max-w-xl">
-                            <h3 className="mt-4 font-display text-4xl font-bold text-ink">
-                              {it.title}
-                            </h3>
-                            <p className="mt-3 text-ink-soft">{it.subtitle}</p>
+                        <div className="relative flex h-full items-center justify-center p-6 sm:p-8">
+                          <div className="flex max-w-3xl flex-col items-center gap-6 text-center">
+                            <h3 className="m-0 font-display text-4xl font-extrabold font-stretch-112% uppercase leading-[0.92] tracking-display text-coal sm:text-5xl lg:text-heading-xl">{it.title}</h3>
+                            <p className="m-0 max-w-md text-base leading-[1.55] text-coal-soft sm:text-lg">
+                              {it.subtitle}
+                            </p>
                           </div>
                         </div>
                       ) : (
-                        <div className="absolute inset-0 rounded-2xl overflow-hidden bg-paper">
+                        <div className="absolute inset-0 rounded-[18px] overflow-hidden bg-linen">
                           <a
                             href={it.url}
                             target="_blank"
@@ -199,18 +200,21 @@ export default function Portfolio() {
                         style={{ opacity: frameOpacity }}
                         className="pointer-events-none absolute inset-0 flex items-center justify-center w-full"
                       >
-                        <div className="w-full h-full rounded-2xl border-2 border-ink/10">
-                          <div className="relative w-full h-full rounded-2xl overflow-hidden border border-line shadow-lg">
+                        <div className="w-full h-full rounded-[18px] border border-coal">
+                          <div className="relative w-full h-full rounded-[18px] overflow-hidden">
                             {/* titlebar */}
-                            <div className="absolute top-0 left-0 right-0 flex items-center gap-3 px-4 py-3 bg-paper border-b border-line">
+                            <div className="absolute top-0 left-0 right-0 flex items-center gap-3 px-4 py-3 bg-coal text-bone">
                               <span className="h-3 w-3 rounded-full bg-[#ff5f57]" />
                               <span className="h-3 w-3 rounded-full bg-[#febc2e]" />
                               <span className="h-3 w-3 rounded-full bg-[#28c840]" />
-                              <div className="mx-auto flex items-center gap-1.5 rounded-md bg-cream px-3 py-1 font-mono text-[10px] text-stone">
+                              <div className="mx-auto flex items-center gap-1.5 rounded-full border border-bone/20 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-bone/72">
                                 {it.type === "project"
                                   ? it.url.replace(/^https?:\/\//, "").replace(/\/$/, "")
                                   : "abstractart.pl"}
                               </div>
+                              <span className="hidden font-mono text-[10px] uppercase tracking-[0.1em] text-bone/50 sm:inline">
+                                {it.type === "project" ? it.title : "AbstractArt"}
+                              </span>
                             </div>
                           </div>
                         </div>

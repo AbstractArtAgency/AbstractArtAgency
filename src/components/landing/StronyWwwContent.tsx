@@ -1,9 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, MapPin } from "lucide-react";
+import { MapPin } from "lucide-react";
 import { AnimatePresence, motion, useMotionValue, useTransform } from "framer-motion";
+import CapabilityIntro from "@/src/components/landing/CapabilityIntro";
+import CalloutItem from "@/src/components/landing/CalloutItem";
 import Contact from "@/src/components/landing/Contact";
+import StatementHeadline from "@/src/components/landing/StatementHeadline";
+import MobileCalloutPairs from "@/src/components/landing/MobileCalloutPairs";
 import Footer from "@/src/components/landing/Footer";
 import Navbar from "@/src/components/landing/Navbar";
 
@@ -30,94 +34,71 @@ const screens: Screen[] = [
       desc: "Buduje rozpoznawalność i profesjonalny wizerunek od pierwszej sekundy.",
     },
     left: {
-      title: "Nagłówek H1",
-      desc: "W kilka sekund komunikuje, czym się zajmujesz i dla kogo pracujesz.",
+      title: "Nagłówek",
+      desc: "Pierwsze spojrzenie klienta. Informuje czym się zajmujesz i co oferujesz.",
     },
     right: {
       title: "Przycisk CTA",
-      desc: "Jasne wezwanie do działania — kluczowy element napędzający konwersję.",
+      desc: "Jasne wezwanie do działania. Kluczowy element napędzający pierwszy kontakt.",
     },
   },
   {
     logo: {
-      title: "Logo w nawigacji",
-      desc: "Zostaje na widoku przez cały czas przeglądania oferty.",
+      title: "Nawigacja",
+      desc: "Zostaje na widoku przez cały czas przeglądania witryny.",
     },
     left: {
-      title: "Sekcja usług",
-      desc: "Pokazuje ofertę w przejrzystej, skanowalnej formie.",
+      title: "Oferta",
+      desc: "Informacje o ofercie zaraz pod główną częścią strony.",
     },
     right: {
-      title: "Karty usług",
-      desc: "Ułatwiają szybkie zrozumienie, co dokładnie oferujesz.",
+      title: "Podział usług / produktów",
+      desc: "Ułatwia szybkie zrozumienie, co dokładnie sprzedajesz.",
     },
   },
   {
     logo: {
       title: "Spójność marki",
-      desc: "Ten sam styl loga w każdej realizacji buduje zaufanie i rozpoznawalność.",
+      desc: "Ten sam styl w każdym miejscu na stronie pokazuje profesjonalizm.",
     },
     left: {
       title: "Portfolio",
-      desc: "Buduje wiarygodność, pokazując konkretne efekty dotychczasowej pracy.",
+      desc: "Pokazując konkretne efekty dotychczasowej pracy budując zaufanie potencjalnych klientów.",
     },
     right: {
       title: "Miniatury projektów",
-      desc: "Zachęcają do kliknięcia i poznania szczegółów realizacji.",
+      desc: "Wizualna zachęta do kliknięcia i poznania szczegółów realizacji.",
     },
   },
   {
     logo: {
-      title: "Marka do końca",
-      desc: "Widoczna aż po finalne wezwanie do kontaktu.",
+      title: "Dopracowane szczegóły",
+      desc: "Tekst, przyciski i kolory. Wszystko według jendego stylu.",
     },
     left: {
       title: "Wezwanie do kontaktu",
-      desc: "Domyka podróż użytkownika jasnym, następnym krokiem.",
+      desc: "Prosty sposób na kontakt klienta z Tobą.",
     },
     right: {
       title: "Formularz / CTA",
-      desc: "Ułatwia zrobienie pierwszego kroku bez opuszczania strony.",
+      desc: "Ułatwia zrobienie pierwszego kroku bez szukania po stronie.",
     },
   },
   {
     logo: {
       title: "Stopka firmowa",
-      desc: "Uspokaja i porządkuje — dane kontaktowe zawsze w zasięgu ręki.",
+      desc: "Zawiera wszystkie najważniejsze informacje o firmie i ułatwia kontakt.",
     },
     left: {
       title: "Dane kontaktowe",
-      desc: "Adres, telefon i e-mail dostępne bez przewijania do góry.",
+      desc: "Adres, telefon i e-mail dostępne bez wracania do góry.",
     },
     right: {
       title: "Mapka Google",
-      desc: "Ułatwia klientom namierzenie lokalizacji firmy bez wychodzenia ze strony.",
+      desc: "Ułatwia klientom znalezienie dokładnej lokalizacji firmy bez opuszczania strony.",
     },
   },
 ];
-
-function CalloutItem({ callout, side }: { callout: Callout; side: "left" | "right" }) {
-  return (
-    <div className={`flex items-start gap-2.5 ${side === "right" ? "flex-row-reverse text-right" : ""}`}>
-      <div className={`flex shrink-0 items-center gap-1 pt-1 ${side === "right" ? "flex-row-reverse" : ""}`}>
-        <div className="h-px w-4 bg-ember/50" />
-        {side === "left" ? (
-          <ArrowLeft className="h-3.5 w-3.5 text-ember" />
-        ) : (
-          <ArrowRight className="h-3.5 w-3.5 text-ember" />
-        )}
-      </div>
-      <div>
-        <p className="font-mono text-xs uppercase tracking-widest text-ember">
-          {callout.title}
-        </p>
-        <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">
-          {callout.desc}
-        </p>
-      </div>
-    </div>
-  );
-}
 
 function MockNavbar() {
   return (
@@ -149,7 +130,7 @@ function ScreenHero() {
         <p className="mt-2 hidden text-[10px] leading-relaxed text-ink-soft sm:block">
           Łączymy design, kod i strategię w jeden spójny produkt.
         </p>
-        <span className="mt-3 inline-block rounded-md bg-ember px-3 py-1.5 font-mono text-[9px] text-cream">
+        <span className="mt-3 inline-block rounded-md bg-ember px-3 py-1.5 font-mono text-[9px] text-bone">
           Zobacz ofertę →
         </span>
       </div>
@@ -206,7 +187,7 @@ function ScreenContact() {
       <span className="font-display text-lg font-bold text-ink sm:text-2xl">
         Porozmawiajmy
       </span>
-      <span className="inline-block rounded-md bg-ember px-4 py-2 font-mono text-[9px] text-cream">
+      <span className="inline-block rounded-md bg-ember px-4 py-2 font-mono text-[9px] text-bone">
         Napisz do nas →
       </span>
     </div>
@@ -227,7 +208,7 @@ function ScreenFooterMap() {
           <p className="mt-1 font-mono text-[8px] text-stone">Pn–Pt: 9:00–17:00</p>
         </div>
         <div className="relative h-full overflow-hidden rounded-lg border border-line bg-cream-dim">
-          <div className="bg-grid pointer-events-none absolute inset-0 opacity-40" />
+          <div className="bg-grid bg-size-[44px_44px] bg-fixed pointer-events-none absolute inset-0 opacity-40" />
           <div className="absolute inset-0 flex items-center justify-center">
             <MapPin className="h-5 w-5 fill-ember text-ember" />
           </div>
@@ -324,71 +305,21 @@ export default function StronyWwwContent() {
   );
 
   return (
-    <main className="min-h-screen bg-cream">
+    <main className="theme-light min-h-screen bg-cream text-ink">
       <Navbar />
       {/* (01) intro */}
-      <section className="relative bg-cream pt-40 pb-20 md:pt-48 md:pb-28">
-        <div className="mx-auto w-full max-w-6xl px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="max-w-3xl font-display text-3xl font-bold uppercase leading-[1.15] text-ink sm:text-5xl md:text-6xl">
-              Strony <span className="text-ember font-accent italic tracking-wide normal-case">WWW</span>
-            </h2>
-            <p className="mt-6 max-w-2xl text-base leading-relaxed text-ink-soft md:text-lg">
-              Projektujemy i wdrażamy nowoczesne i szybkie strony www, oraz obsługujemy już istniejące.
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="mt-10 flex flex-col gap-6 border-t border-line pt-10 md:flex-row md:items-end md:justify-between"
-          >
-            <p className="max-w-xs text-sm leading-relaxed text-ink-soft">
-              Zakres: projekt, kod, wdrożenie (opcjonalnie utrzymanie). Czas realizacji: 2-4 tygodni.
-            </p>
-            <p className="max-w-xs text-sm leading-relaxed text-ink-soft md:text-right">
-              Efekt: gotowa strona internetowa dla Twojej firmy, zaprojektowana pod konwersję.
-            </p>
-            <span className="shrink-0 font-mono text-sm text-stone">(01)</span>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.6, delay: 0.15 }}
-            className="mt-10 flex flex-col items-start gap-4 sm:flex-row"
-          >
-            <a
-              href="/contact"
-              className="group relative overflow-hidden rounded-lg bg-ink px-8 py-4 font-mono text-sm text-cream"
-            >
-              <span className="absolute inset-0 origin-left scale-x-0 bg-ember transition-transform duration-500 ease-out group-hover:scale-x-100" />
-              <span className="relative z-10">Umów rozmowę →</span>
-            </a>
-            <a
-              href="/#capabilities"
-              className="group relative flex items-center justify-center gap-2 overflow-hidden rounded-lg border border-line bg-paper px-8 py-4 font-mono text-sm text-ink transition-colors duration-500 hover:border-ember"
-            >
-              <span className="absolute inset-0 origin-left scale-x-0 bg-ember transition-transform duration-500 ease-out group-hover:scale-x-100" />
-              <span className="relative z-10 transition-colors duration-500 group-hover:text-cream">
-                Wszystkie możliwości
-              </span>
-            </a>
-          </motion.div>
-        </div>
-      </section>
+      <CapabilityIntro
+        slug="strony-www"
+        eyebrow="Strony"
+        word="WWW"
+        note="szybko i nowocześnie"
+        highlight="Projektujemy i wdrażamy nowoczesne, szybkie i bezpieczne strony www."
+        description="Projektujemy i wdrażamy nowoczesne, szybkie i bezpieczne strony www. Dbamy o to, żeby strona dobrze wyglądała na każdym ekranie, ładowała się błyskawicznie i prowadziła odwiedzających prosto do kontaktu z Tobą. Możemy też zaopiekować się już istniejącymi stronami."
+      />
 
       {/* (02) demo */}
-      <section className="relative border-t border-line bg-cream-dim py-20 md:py-28">
-        <div className="bg-grid pointer-events-none absolute inset-0 opacity-10" />
+      <section className="relative border-t border-line bg-cream-dim bg-paper-grain bg-size-[256px_256px] bg-fixed py-20 md:py-28">
+        <div className="bg-grid bg-size-[44px_44px] bg-fixed pointer-events-none absolute inset-0 opacity-10" />
 
         <div className="relative mx-auto w-full max-w-6xl px-6">
           <motion.div
@@ -396,26 +327,25 @@ export default function StronyWwwContent() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6 }}
-            className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between"
+            className="flex flex-col gap-6"
           >
-            <div className="flex shrink-0 items-center gap-3">
-              <span className="font-mono text-sm text-stone">(02)</span>
-              <span className="font-mono text-xs uppercase tracking-widest text-stone">
-                Jak projektujemy
-              </span>
-            </div>
-
-            <p className="max-w-xl font-display text-2xl font-bold leading-snug text-ink sm:text-4xl md:text-5xl">
-              Przewiń, żeby zobaczyć, jak powstaje strona.
-            </p>
+            <StatementHeadline
+              note="przewiń ↓"
+              lines={[
+                { parts: ["Zobacz co"] },
+                { indent: 1, parts: ["powinna mieć"] },
+                { parts: [{ brush: "dobra" }, " strona"] },
+                { indent: 2, parts: [{ accent: "www." }] },
+              ]}
+            />
           </motion.div>
 
           {/* desktop: scroll-synced mac window with side callouts */}
-          <div ref={trackRef} className="relative mt-16 hidden md:block" style={{ height: "520vh" }}>
+          <div ref={trackRef} className="relative mt-12 md:mt-16" style={{ height: "520vh" }}>
             <div className="sticky top-[var(--header-height,96px)] flex h-[calc(100vh-var(--header-height,96px))] items-center">
-              <div className="grid w-full grid-cols-[180px_minmax(0,1fr)_180px] items-center gap-4 lg:grid-cols-[200px_minmax(0,1fr)_200px] lg:gap-6">
+              <div className="grid w-full grid-cols-1 items-center gap-6 md:grid-cols-[190px_minmax(0,1fr)_190px] md:gap-4 lg:grid-cols-[240px_minmax(0,1fr)_240px] lg:gap-6">
                 {/* left column */}
-                <div className="flex flex-col gap-12">
+                <div className="hidden flex-col gap-12 md:flex">
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={`logo-${activeScreen}`}
@@ -441,48 +371,52 @@ export default function StronyWwwContent() {
                 </div>
 
                 {/* mac window mockup */}
-                <div className="mx-auto w-full max-w-[min(58vw,960px)]">
+                <div className="mx-auto w-full max-w-[min(58vw,960px)] max-md:max-w-none">
                   <div
                     className="relative overflow-hidden rounded-2xl border border-line bg-paper shadow-xl"
                     style={{ aspectRatio: "16 / 10" }}
                   >
-                    {/* titlebar */}
-                    <div className="absolute inset-x-0 top-0 z-10 flex h-11 items-center gap-3 border-b border-line bg-paper px-4">
-                      <span className="h-3 w-3 rounded-full bg-[#ff5f57]" />
-                      <span className="h-3 w-3 rounded-full bg-[#febc2e]" />
-                      <span className="h-3 w-3 rounded-full bg-[#28c840]" />
-                      <div className="mx-auto flex items-center gap-1.5 rounded-md bg-cream px-3 py-1 font-mono text-[10px] text-stone">
-                        twojafirma.pl
+                    {/* na mobile cała zawartość okna jest renderowana jak na szerszym ekranie i pomniejszana (scale 0.6),
+                        żeby elementy strony były proporcjonalnie mniejsze; transform nie wpływa na pomiar clientHeight */}
+                    <div className="absolute left-0 top-0 h-full w-full origin-top-left max-md:h-[166.667%] max-md:w-[166.667%] max-md:scale-[0.6]">
+                      {/* titlebar */}
+                      <div className="absolute inset-x-0 top-0 z-10 flex h-11 items-center gap-3 border-b border-line bg-paper px-4">
+                        <span className="h-3 w-3 rounded-full bg-[#ff5f57]" />
+                        <span className="h-3 w-3 rounded-full bg-[#febc2e]" />
+                        <span className="h-3 w-3 rounded-full bg-[#28c840]" />
+                        <div className="mx-auto flex items-center gap-1.5 rounded-md bg-cream px-3 py-1 font-mono text-[10px] text-stone">
+                          twojafirma.pl
+                        </div>
                       </div>
-                    </div>
 
-                    {/* fixed mini navbar */}
-                    <div className="absolute inset-x-0 top-11 z-10">
-                      <MockNavbar />
-                    </div>
+                      {/* fixed mini navbar */}
+                      <div className="absolute inset-x-0 top-11 z-10">
+                        <MockNavbar />
+                      </div>
 
-                    {/* clipped scrolling viewport */}
-                    <div
-                      ref={viewportRef}
-                      className="absolute inset-x-0 bottom-0 overflow-hidden bg-cream"
-                      style={{ top: "5.5rem" }}
-                    >
-                      <motion.div style={{ y: translateY }} className="absolute inset-x-0 top-0">
-                        {screenComponents.map((ScreenComponent, index) => (
-                          <div
-                            key={index}
-                            style={{ height: screenHeight ? `${screenHeight}px` : "100%" }}
-                          >
-                            <ScreenComponent />
-                          </div>
-                        ))}
-                      </motion.div>
+                      {/* clipped scrolling viewport */}
+                      <div
+                        ref={viewportRef}
+                        className="absolute inset-x-0 bottom-0 overflow-hidden bg-cream"
+                        style={{ top: "5.5rem" }}
+                      >
+                        <motion.div style={{ y: translateY }} className="absolute inset-x-0 top-0">
+                          {screenComponents.map((ScreenComponent, index) => (
+                            <div
+                              key={index}
+                              style={{ height: screenHeight ? `${screenHeight}px` : "100%" }}
+                            >
+                              <ScreenComponent />
+                            </div>
+                          ))}
+                        </motion.div>
+                      </div>
                     </div>
                   </div>
                 </div>
 
                 {/* right column */}
-                <div className="flex flex-col gap-12">
+                <div className="hidden flex-col gap-12 md:flex">
                   <CalloutItem callout={staticRight} side="right" />
                   <AnimatePresence mode="wait">
                     <motion.div
@@ -496,71 +430,16 @@ export default function StronyWwwContent() {
                     </motion.div>
                   </AnimatePresence>
                 </div>
+
+                {/* mobile: hasła parami pod urządzeniem */}
+                <MobileCalloutPairs
+                  progress={progress}
+                  callouts={[staticRight, ...screens.flatMap((s) => [s.logo, s.left, s.right])]}
+                />
               </div>
             </div>
           </div>
 
-          {/* mobile: static window + stacked list */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="mt-12 md:hidden"
-          >
-            <div
-              className="relative mx-auto w-full max-w-sm overflow-hidden rounded-2xl border border-line bg-paper shadow-xl"
-              style={{ aspectRatio: "16 / 10" }}
-            >
-              <div className="absolute inset-x-0 top-0 z-10 flex items-center gap-2 border-b border-line bg-paper px-3 py-2.5">
-                <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
-                <span className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
-                <span className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
-                <div className="mx-auto rounded-md bg-cream px-2.5 py-1 font-mono text-[9px] text-stone">
-                  twojafirma.pl
-                </div>
-              </div>
-              <div className="absolute inset-0 top-9 flex flex-col bg-cream px-4 py-4">
-                <div className="flex items-center justify-between">
-                  <span className="font-display text-xs font-bold text-ink">
-                    Studio<span className="text-ember">.</span>
-                  </span>
-                  <span className="rounded-md bg-ink px-2 py-1 font-mono text-[8px] text-cream">
-                    Kontakt
-                  </span>
-                </div>
-                <div className="mt-auto">
-                  <span className="font-mono text-[8px] uppercase tracking-widest text-ember">
-                    Agencja kreatywna
-                  </span>
-                  <h3 className="mt-1.5 font-display text-sm font-bold leading-tight text-ink">
-                    Projektujemy strony, które sprzedają.
-                  </h3>
-                  <span className="mt-2 inline-block rounded-md bg-ember px-2.5 py-1 font-mono text-[8px] text-cream">
-                    Zobacz ofertę →
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-8 space-y-5">
-              {[staticRight, ...screens.flatMap((s) => [s.logo, s.left, s.right])].map(
-                (callout, index) => (
-                  <div key={`${callout.title}-${index}`} className="flex items-start gap-3">
-                    <ArrowRight className="mt-1 h-3.5 w-3.5 shrink-0 text-ember" />
-                    <div>
-                      <p className="font-mono text-xs uppercase tracking-widest text-ember">
-                        {callout.title}
-                      </p>
-                      <p className="mt-1 text-sm leading-relaxed text-ink-soft">
-                        {callout.desc}
-                      </p>
-                    </div>
-                  </div>
-                ),
-              )}
-            </div>
-          </motion.div>
         </div>
       </section>
 

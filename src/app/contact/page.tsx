@@ -10,11 +10,9 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <main className="min-h-screen bg-cream">
+    <main className="theme-light min-h-screen bg-cream text-ink">
       <Navbar />
-      <div className="pt-24">
-        <ContactSplit />
-      </div>
+      <ContactSplit />
       <Footer />
     </main>
   );

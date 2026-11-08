@@ -5,11 +5,13 @@ import Footer from "@/src/components/landing/Footer";
 import Navbar from "@/src/components/landing/Navbar";
 import StartProjectForm from "@/src/components/landing/StartProjectForm";
 
+const ease = [0.16, 1, 0.3, 1] as const;
+
 const steps = [
   {
     num: "01",
     title: "Wypełniasz formularz",
-    desc: "Opisujesz swoją firmę, cele i budżet — zajmie Ci to mniej niż 2 minuty.",
+    desc: "Opisz swoją firmę, cele i budżet. To będzie nasza baza do startu.",
   },
   {
     num: "02",
@@ -24,110 +26,85 @@ const steps = [
   {
     num: "04",
     title: "Rozpoczynamy pracę",
-    desc: "Ruszamy z realizacją — z regularnymi checkpointami na każdym etapie.",
+    desc: "Rozpoczynamy realizację z regularnymi checkpointami na każdym etapie.",
   },
 ];
 
+/** Podstrona Rozpocznij projekt w stylu plakatu: wielkie słowo z notką, kroki jako ciemne kafle i formularz. */
 export default function StartProjectContent() {
   return (
-    <main className="min-h-screen bg-cream">
+    <main className="theme-light min-h-screen bg-cream text-ink">
       <Navbar />
 
-      <section className="relative overflow-hidden bg-cream pt-40 pb-8 md:pt-48">
-        <div className="bg-grid pointer-events-none absolute inset-0 opacity-20" />
-
-        <div className="relative mx-auto flex h-70 w-full max-w-6xl items-center justify-center px-6 sm:h-85 md:h-100">
-          <h1 className="pointer-events-none select-none whitespace-nowrap font-accent italic text-[20vw] font-black uppercase leading-none tracking-tight text-ember sm:text-[16vw] lg:text-[13vw]">
-            Zacznijmy
+      <section className="bg-glow-top bg-size-[auto,256px_256px] bg-fixed relative overflow-hidden bg-cream pt-[calc(var(--header-height,96px)+3rem)] pb-20 md:pb-28">
+        <div className="@container mx-auto w-full max-w-6xl px-6">
+          {/* nagłówek: mała linia + wielkie słowo + odręczna notka */}
+          <h1 className="m-0 text-center">
+            <motion.span
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, ease }}
+              className="block font-display text-2xl font-extrabold font-stretch-110% uppercase leading-[1.05] tracking-display text-ink sm:text-4xl"
+            >
+              Rozpocznij{" "}
+              <span className="bg-ember px-[0.06em] text-bone [box-decoration-break:clone]">swój projekt</span>
+            </motion.span>
+            <span className="relative mt-3 block">
+              <motion.span
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1, duration: 0.9, ease }}
+                className="block whitespace-nowrap font-display text-[16cqw] font-extrabold font-stretch-112% uppercase leading-[0.82] tracking-[-0.04em] text-ink"
+              >
+                Zacznijmy
+              </motion.span>
+            </span>
           </h1>
-        </div>
 
-        <div className="relative mt-6 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 px-6 text-center font-mono text-[10px] uppercase tracking-widest text-stone md:text-xs">
-          <span>Nowy klient</span>
-          <span className="text-line">/</span>
-          <span>Rozpocznij współpracę</span>
-        </div>
-      </section>
-
-      <section className="relative border-t border-line bg-cream-dim py-20 md:py-28">
-        <div className="mx-auto w-full max-w-6xl px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6 }}
-            className="mb-12 flex flex-col gap-6 md:flex-row md:items-end md:justify-between"
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.6, ease }}
+            className="mx-auto mt-8 max-w-xl text-center text-base leading-relaxed text-ink-soft md:text-lg"
           >
-            <div>
-              <span className="font-mono text-sm text-stone">(01)</span>
-              <h2 className="mt-3 max-w-xl font-display text-3xl font-bold tracking-tight text-ink md:text-5xl">
-                Opowiedz nam o <span className="text-ember font-accent italic tracking-wide">projekcie</span>
-              </h2>
-            </div>
-            <p className="max-w-xs text-sm leading-relaxed text-ink-soft md:text-right">
-              Kilka pytań, żadnych zbędnych formalności. Odzywamy się w ciągu 24 godzin.
-            </p>
-          </motion.div>
+            Nie zwlekaj! Napisz do nas jeśli masz jakieś pytania. Odzywamy się w ciągu 24 godzin.
+          </motion.p>
 
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-          >
-            <StartProjectForm />
-          </motion.div>
-        </div>
-      </section>
-
-      <section className="relative border-t border-line bg-cream-dim py-20 md:py-28">
-        <div className="mx-auto w-full max-w-6xl px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6 }}
-            className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between"
-          >
-            <div className="flex shrink-0 items-center gap-3">
-              <span className="font-mono text-sm text-stone">(02)</span>
-              <span className="font-mono text-xs uppercase tracking-widest text-stone">
-                Jak zaczynamy
-              </span>
+          <div className="mt-16 grid gap-6 md:mt-24 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:gap-8">
+            {/* jak zaczynamy — kroki jako ciemne kafle (na desktopie przyklejone podczas wypełniania) */}
+            <div className="md:sticky md:top-[calc(var(--header-height,96px)+1.5rem)] md:self-start">
+              <p className="m-0 mb-4 font-mono text-[10px] uppercase tracking-[0.2em] text-stone">
+                Cztery kroki od pomysłu do startu
+              </p>
+              <ol className="m-0 grid list-none grid-cols-1 gap-3 p-0 sm:grid-cols-2 md:grid-cols-1">
+                {steps.map((step, index) => (
+                  <motion.li
+                    key={step.num}
+                    initial={{ opacity: 0, y: 16 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-60px" }}
+                    transition={{ duration: 0.6, ease, delay: index * 0.08 }}
+                    className="flex flex-col gap-4 rounded-[14px] bg-ink p-5 text-cream"
+                  >
+                    <div className="flex items-start justify-between gap-4">
+                      <h3 className="m-0 font-display text-lg font-extrabold font-stretch-110% uppercase leading-[0.95] tracking-[-0.02em]">
+                        {step.title}
+                      </h3>
+                    </div>
+                    <p className="m-0 text-[14px] leading-snug text-cream/70">{step.desc}</p>
+                  </motion.li>
+                ))}
+              </ol>
             </div>
 
-            <p className="max-w-xl font-display text-2xl font-bold leading-snug text-ink sm:text-4xl md:text-5xl">
-              Cztery kroki od pomysłu do startu projektu.
-            </p>
-          </motion.div>
-
-          <div className="relative mt-16 pl-14">
-            <div className="absolute left-[13px] top-2 bottom-2 w-px -translate-x-1/2 bg-line">
-              <div className="h-full w-full origin-top bg-ember" />
-            </div>
-
-            <div className="space-y-10 md:space-y-14">
-              {steps.map((step, index) => (
-                <motion.div
-                  key={step.num}
-                  initial={{ opacity: 0, x: -16 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, margin: "-50px" }}
-                  transition={{ duration: 0.5, delay: index * 0.08 }}
-                  className="relative"
-                >
-                  <span className="absolute -left-14 top-0 flex h-9 w-9 items-center justify-center rounded-full border border-ember bg-cream-dim font-mono text-[11px] text-ember">
-                    {step.num}
-                  </span>
-                  <h3 className="font-display text-xl font-bold text-ink md:text-2xl">
-                    {step.title}
-                  </h3>
-                  <p className="mt-2 max-w-xl text-sm leading-relaxed text-ink-soft md:text-base">
-                    {step.desc}
-                  </p>
-                </motion.div>
-              ))}
-            </div>
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.7, ease, delay: 0.1 }}
+            >
+              <StartProjectForm />
+            </motion.div>
           </div>
         </div>
       </section>

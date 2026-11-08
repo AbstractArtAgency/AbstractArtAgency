@@ -1,26 +1,17 @@
 import type { Metadata } from "next";
-import {
-  Inter,
-  Instrument_Serif,
-  JetBrains_Mono,
-  Space_Grotesk,
-} from "next/font/google";
+import { Archivo, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
+const archivo = Archivo({
   subsets: ["latin", "latin-ext"],
-  variable: "--font-inter",
-  display: "swap",
-});
-
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin", "latin-ext"],
-  variable: "--font-space-grotesk",
+  axes: ["wdth"],
+  variable: "--font-archivo",
   display: "swap",
 });
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin", "latin-ext"],
+  weight: ["400", "500"],
   variable: "--font-jetbrains-mono",
   display: "swap",
 });
@@ -47,9 +38,9 @@ export default function RootLayout({
   return (
     <html
       lang="pl"
-      className={`scroll-smooth antialiased ${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} ${instrumentSerif.variable}`}
+      className={`scroll-smooth bg-coal antialiased ${archivo.variable} ${jetbrainsMono.variable} ${instrumentSerif.variable}`}
     >
-      <body>{children}</body>
+      <body className="min-h-screen bg-coal font-sans text-bone">{children}</body>
     </html>
   );
 }

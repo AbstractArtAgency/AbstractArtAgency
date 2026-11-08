@@ -2,8 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import {
-  ArrowLeft,
-  ArrowRight,
   ChevronLeft,
   ChevronRight,
   Heart,
@@ -13,7 +11,11 @@ import {
   X,
 } from "lucide-react";
 import { AnimatePresence, motion, useMotionValue, useTransform } from "framer-motion";
+import CapabilityIntro from "@/src/components/landing/CapabilityIntro";
+import CalloutItem from "@/src/components/landing/CalloutItem";
 import Contact from "@/src/components/landing/Contact";
+import StatementHeadline from "@/src/components/landing/StatementHeadline";
+import MobileCalloutPairs from "@/src/components/landing/MobileCalloutPairs";
 import Footer from "@/src/components/landing/Footer";
 import Navbar from "@/src/components/landing/Navbar";
 
@@ -37,28 +39,28 @@ const posts: Post[] = [
   {
     profile: {
       title: "Zdjęcie profilowe",
-      desc: "Widoczne przy każdym poście — buduje spójność i rozpoznawalność konta.",
+      desc: "Widoczne przy każdym poście. Pokazuje spójność marki i konta.",
     },
     left: {
-      title: "Zdjęcie produktowe",
+      title: "Przyciągnięcie uwagi",
       desc: "Wysokiej jakości grafika przyciąga uwagę w ułamku sekundy.",
     },
     right: {
-      title: "Reakcje i opis",
-      desc: "Polubienia i podpis budują społeczny dowód słuszności.",
+      title: "Reakcje i komentarze",
+      desc: "Polubienia i komentarze pokazują społeczny dowód zaufania.",
     },
   },
   {
     profile: {
-      title: "Profil przy rolce",
-      desc: "Nawet przy wideo przypomina odbiorcy, czyj to profil.",
-    },
-    left: {
-      title: "Rolka / wideo",
+      title: "Rolka / video",
       desc: "Krótka forma wideo zwiększa zasięgi i czas spędzony na profilu.",
     },
+    left: {
+      title: "Dobry hook",
+      desc: "Każe video potrzebuje dobrego hooka, który przyciągnie uwagę.",
+    },
     right: {
-      title: "Napisy w wideo",
+      title: "Napisy w video",
       desc: "Podpowiadają kontekst nawet bez włączonego dźwięku.",
     },
   },
@@ -72,18 +74,18 @@ const posts: Post[] = [
       desc: "Wiele slajdów wydłuża czas interakcji i angażuje odbiorcę.",
     },
     right: {
-      title: "Wskaźnik slajdów",
-      desc: "Pokazuje, ile jeszcze treści zostało do zobaczenia.",
+      title: "Dobry opis",
+      desc: "Jest często dopełnieniem lub dopowiedzeniem treści w poście.",
     },
   },
   {
     profile: {
-      title: "Marka do końca",
-      desc: "Zostaje na widoku aż po finalne wezwanie do działania.",
+      title: "Post sponsorowany",
+      desc: "Promowane i targetowane posty docierające do nowych odbiorców.",
     },
     left: {
-      title: "Grafika z CTA",
-      desc: "Jasne wezwanie do działania prowadzi użytkownika do kontaktu.",
+      title: "Powtarzalność",
+      desc: "Uytkownik widzi tą samą reklamę parę razy. Zwiększa to szansę na jego działanie.",
     },
     right: {
       title: "Przycisk akcji",
@@ -91,29 +93,6 @@ const posts: Post[] = [
     },
   },
 ];
-
-function CalloutItem({ callout, side }: { callout: Callout; side: "left" | "right" }) {
-  return (
-    <div className={`flex items-start gap-2.5 ${side === "right" ? "flex-row-reverse text-right" : ""}`}>
-      <div className={`flex shrink-0 items-center gap-1 pt-1 ${side === "right" ? "flex-row-reverse" : ""}`}>
-        <div className="h-px w-4 bg-ember/50" />
-        {side === "left" ? (
-          <ArrowLeft className="h-3.5 w-3.5 text-ember" />
-        ) : (
-          <ArrowRight className="h-3.5 w-3.5 text-ember" />
-        )}
-      </div>
-      <div>
-        <p className="font-mono text-xs uppercase tracking-widest text-ember">
-          {callout.title}
-        </p>
-        <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">
-          {callout.desc}
-        </p>
-      </div>
-    </div>
-  );
-}
 
 function StoryAvatar({
   onClick,
@@ -143,7 +122,7 @@ function MockAppHeader({ onAvatarClick }: { onAvatarClick?: () => void }) {
     <div className="flex h-11 shrink-0 items-center justify-between border-b border-line bg-cream px-4">
       <div className="flex items-center gap-2">
         <StoryAvatar onClick={onAvatarClick} />
-        <span className="font-display text-xs font-bold text-ink">studio.agencja</span>
+        <span className="font-display text-xs font-bold text-ink">AbstractArt</span>
       </div>
       <div className="flex items-center gap-3">
         <Heart className="h-4 w-4 text-ink-soft" />
@@ -158,7 +137,7 @@ function PostProduct() {
     <div className="flex h-full flex-col">
       <div className="flex items-center gap-2 px-3 py-2">
         <div className="h-5 w-5 shrink-0 rounded-full bg-ember/30" />
-        <span className="font-mono text-[8px] font-bold text-ink">studio.agencja</span>
+        <span className="font-mono text-[8px] font-bold text-ink">AbstractArt</span>
       </div>
       <div className="flex-1 bg-linear-to-br from-ember/20 via-cream-dim to-paper" />
       <div className="flex items-center gap-3 px-3 py-1.5">
@@ -167,7 +146,7 @@ function PostProduct() {
         <Send className="h-3.5 w-3.5 text-ink" />
       </div>
       <p className="px-3 pb-2 font-mono text-[7px] leading-relaxed text-ink-soft">
-        <span className="font-bold text-ink">studio.agencja</span> Nowy projekt gotowy do wdrożenia ✨
+        <span className="font-bold text-ink">AbstractArt</span> Nowy projekt gotowy do wdrożenia ✨
       </p>
     </div>
   );
@@ -175,17 +154,17 @@ function PostProduct() {
 
 function PostReel() {
   return (
-    <div className="relative flex h-full items-center justify-center bg-ink">
-      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-cream/15">
-        <Play className="h-4 w-4 fill-cream text-cream" />
+    <div className="relative flex h-full items-center justify-center bg-coal">
+      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-bone/15">
+        <Play className="h-4 w-4 fill-bone text-bone" />
       </div>
-      <span className="absolute bottom-3 left-3 font-mono text-[7px] text-cream">
-        Zza kulis projektu 🎬
+      <span className="absolute bottom-3 left-3 font-mono text-[7px] text-bone">
+        Kulisy projektu 🎬
       </span>
       <div className="absolute right-3 top-1/2 flex -translate-y-1/2 flex-col items-center gap-3">
-        <Heart className="h-3.5 w-3.5 text-cream" />
-        <MessageCircle className="h-3.5 w-3.5 text-cream" />
-        <Send className="h-3.5 w-3.5 text-cream" />
+        <Heart className="h-3.5 w-3.5 text-bone" />
+        <MessageCircle className="h-3.5 w-3.5 text-bone" />
+        <Send className="h-3.5 w-3.5 text-bone" />
       </div>
     </div>
   );
@@ -203,7 +182,7 @@ function PostCarousel() {
     <div className="flex h-full flex-col">
       <div className="flex items-center gap-2 px-3 py-2">
         <div className="h-5 w-5 shrink-0 rounded-full bg-ember/30" />
-        <span className="font-mono text-[8px] font-bold text-ink">studio.agencja</span>
+        <span className="font-mono text-[8px] font-bold text-ink">AbstractArt</span>
       </div>
       <div className="relative flex-1 overflow-hidden bg-linear-to-br from-cream-dim via-paper to-ember/15">
         {/* in the future: real photo per slide index (`slide`) */}
@@ -245,7 +224,7 @@ function PostCarousel() {
         <Send className="h-3.5 w-3.5 text-ink" />
       </div>
       <p className="px-3 pb-2 font-mono text-[7px] leading-relaxed text-ink-soft">
-        <span className="font-bold text-ink">studio.agencja</span> Case study: +240% ruchu w 3 miesiące →
+        <span className="font-bold text-ink">AbstractArt</span> Case study: +240% ruchu w 3 miesiące →
       </p>
     </div>
   );
@@ -257,7 +236,7 @@ function PostCta() {
       <div className="flex items-center gap-2 px-3 py-2">
         <div className="h-5 w-5 shrink-0 rounded-full bg-ember/30" />
         <div>
-          <span className="block font-mono text-[8px] font-bold text-ink">studio.agencja</span>
+          <span className="block font-mono text-[8px] font-bold text-ink">AbstractArt</span>
           <span className="block font-mono text-[6px] text-stone">Sponsorowane</span>
         </div>
       </div>
@@ -265,7 +244,7 @@ function PostCta() {
         <span className="font-display text-sm font-bold text-ink sm:text-base">
           Link w bio →
         </span>
-        <span className="rounded-md bg-ember px-3 py-1.5 font-mono text-[8px] text-cream">
+        <span className="rounded-md bg-ember px-3 py-1.5 font-mono text-[8px] text-bone">
           Umów konsultację
         </span>
       </div>
@@ -275,7 +254,7 @@ function PostCta() {
         <Send className="h-3.5 w-3.5 text-ink" />
       </div>
       <p className="px-3 pb-2 font-mono text-[7px] leading-relaxed text-ink-soft">
-        <span className="font-bold text-ink">studio.agencja</span> Umów bezpłatną konsultację i zacznij pozyskiwać klientów z social media 🚀
+        <span className="font-bold text-ink">AbstractArt</span> Umów rozmowę i zacznij pozyskiwać klientów z social mediów 🚀
       </p>
     </div>
   );
@@ -299,13 +278,13 @@ function StoryOverlay({ onClose }: { onClose: () => void }) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
-      className="absolute inset-0 z-20 overflow-hidden bg-ink"
+      className="absolute inset-0 z-20 overflow-hidden bg-coal"
     >
       {/* progress bar */}
       <div className="absolute inset-x-2 top-2 z-10 flex gap-1">
-        <div className="h-0.5 flex-1 overflow-hidden rounded-full bg-cream/30">
+        <div className="h-0.5 flex-1 overflow-hidden rounded-full bg-bone/30">
           <div
-            className="h-full bg-cream"
+            className="h-full bg-bone"
             style={{
               width: filled ? "100%" : "0%",
               transition: "width 5000ms linear",
@@ -317,31 +296,24 @@ function StoryOverlay({ onClose }: { onClose: () => void }) {
       {/* header */}
       <div className="absolute inset-x-0 top-5 z-10 flex items-center justify-between px-3 py-2">
         <div className="flex items-center gap-2">
-          <div className="h-6 w-6 shrink-0 rounded-full bg-linear-to-br from-ember to-ember-light ring-2 ring-cream/40" />
-          <span className="font-mono text-[9px] font-bold text-cream">studio.agencja</span>
-          <span className="font-mono text-[8px] text-cream/60">teraz</span>
+          <div className="h-6 w-6 shrink-0 rounded-full bg-linear-to-br from-ember to-ember-light ring-2 ring-bone/40" />
+          <span className="font-mono text-[9px] font-bold text-bone">AbstractArt</span>
+          <span className="font-mono text-[8px] text-bone/60">teraz</span>
         </div>
         <button
           type="button"
           onClick={onClose}
           aria-label="Zamknij Stories"
-          className="text-cream/80 transition-colors hover:text-cream"
+          className="text-bone/80 transition-colors hover:text-bone"
         >
           <X className="h-4 w-4" />
         </button>
       </div>
 
       {/* story content */}
-      <div className="flex h-full items-center justify-center bg-linear-to-br from-ember/40 via-ink to-ink px-8 text-center">
-        <p className="font-display text-base font-bold leading-snug text-cream">
-          Zza kulis pracy nad projektem 👀
-        </p>
-      </div>
-
-      {/* small info once opened */}
-      <div className="absolute inset-x-0 bottom-0 z-10 border-t border-cream/10 bg-ink/70 px-3 py-2.5 backdrop-blur-sm">
-        <p className="font-mono text-[7px] leading-relaxed text-cream/70">
-          💡 To przykładowe Instagram Stories — tak Twoi klienci zobaczą swoje relacje.
+      <div className="flex h-full items-center justify-center bg-linear-to-br from-ember/40 via-coal to-coal px-8 text-center">
+        <p className="font-display text-base font-bold leading-snug text-bone">
+          Kulisy pracy nad projektem 👀
         </p>
       </div>
     </motion.div>
@@ -433,72 +405,22 @@ export default function SocialMediaContent() {
   );
 
   return (
-    <main className="min-h-screen bg-cream">
+    <main className="theme-light min-h-screen bg-cream text-ink">
       <Navbar />
 
       {/* (01) intro */}
-      <section className="relative bg-cream pt-40 pb-20 md:pt-48 md:pb-28">
-        <div className="mx-auto w-full max-w-6xl px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="max-w-3xl font-display text-3xl font-bold uppercase leading-[1.15] text-ink sm:text-5xl md:text-6xl">
-              Social media <span className="text-ember font-accent italic tracking-wide normal-case">marketing</span>
-            </h2>
-            <p className="mt-6 max-w-2xl text-base leading-relaxed text-ink-soft md:text-lg">
-              Tworzymy i wdrażamy strategie treści i zarządzania profilami, które budują społeczność wokół marki.
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="mt-10 flex flex-col gap-6 border-t border-line pt-10 md:flex-row md:items-end md:justify-between"
-          >
-            <p className="max-w-xs text-sm leading-relaxed text-ink-soft">
-              Zakres: strategia, treści, moderacja. Publikacje: harmonogram tygodniowy.
-            </p>
-            <p className="max-w-xs text-sm leading-relaxed text-ink-soft md:text-right">
-              Efekt: rosnąca społeczność marki i regularny kontakt z odbiorcami.
-            </p>
-            <span className="shrink-0 font-mono text-sm text-stone">(01)</span>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.6, delay: 0.15 }}
-            className="mt-10 flex flex-col items-start gap-4 sm:flex-row"
-          >
-            <a
-              href="/contact"
-              className="group relative overflow-hidden rounded-lg bg-ink px-8 py-4 font-mono text-sm text-cream"
-            >
-              <span className="absolute inset-0 origin-left scale-x-0 bg-ember transition-transform duration-500 ease-out group-hover:scale-x-100" />
-              <span className="relative z-10">Umów rozmowę →</span>
-            </a>
-            <a
-              href="/#capabilities"
-              className="group relative flex items-center justify-center gap-2 overflow-hidden rounded-lg border border-line bg-paper px-8 py-4 font-mono text-sm text-ink transition-colors duration-500 hover:border-ember"
-            >
-              <span className="absolute inset-0 origin-left scale-x-0 bg-ember transition-transform duration-500 ease-out group-hover:scale-x-100" />
-              <span className="relative z-10 transition-colors duration-500 group-hover:text-cream">
-                Wszystkie możliwości
-              </span>
-            </a>
-          </motion.div>
-        </div>
-      </section>
+      <CapabilityIntro
+        slug="social-media"
+        eyebrow="Social media"
+        word="Marketing"
+        note="więcej zasięgu ↗"
+        highlight="Ty zajmujesz się swoim biznesem, a my jego widocznością w sieci."
+        description="Opracowujemy i wdrażamy strategie prowadzenia profili w mediach społecznościowych, które budują zaangażowaną wokół marki. Planujemy publikacje, przygotowujemy zdjęcia i video, rolki i teksty, moderujemy komentarze i analizujemy wyniki. Ty zajmujesz się swoim biznesem, a my jego widocznością w sieci."
+      />
 
       {/* (02) demo */}
-      <section className="relative border-t border-line bg-cream-dim py-20 md:py-28">
-        <div className="bg-grid pointer-events-none absolute inset-0 opacity-10" />
+      <section className="relative border-t border-line bg-cream-dim bg-paper-grain bg-size-[256px_256px] bg-fixed py-20 md:py-28">
+        <div className="bg-grid bg-size-[44px_44px] bg-fixed pointer-events-none absolute inset-0 opacity-10" />
 
         <div className="relative mx-auto w-full max-w-6xl px-6">
           <motion.div
@@ -506,26 +428,25 @@ export default function SocialMediaContent() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6 }}
-            className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between"
+            className="flex flex-col gap-6"
           >
-            <div className="flex shrink-0 items-center gap-3">
-              <span className="font-mono text-sm text-stone">(02)</span>
-              <span className="font-mono text-xs uppercase tracking-widest text-stone">
-                Jak projektujemy
-              </span>
-            </div>
-
-            <p className="max-w-xl font-display text-2xl font-bold leading-snug text-ink sm:text-4xl md:text-5xl">
-              Przewiń, żeby zobaczyć, jak powstaje feed.
-            </p>
+            <StatementHeadline
+              note="przewiń ↓"
+              lines={[
+                { parts: ["Zobacz jak"] },
+                { indent: 1, parts: ["powstaje ", { brush: "dobry" }] },
+                { parts: ["feed w social"] },
+                { indent: 2, parts: [{ accent: "mediach." }] },
+              ]}
+            />
           </motion.div>
 
           {/* desktop: scroll-synced app feed with side callouts */}
-          <div ref={trackRef} className="relative mt-16 hidden md:block" style={{ height: "420vh" }}>
+          <div ref={trackRef} className="relative mt-12 md:mt-16" style={{ height: "420vh" }}>
             <div className="sticky top-[var(--header-height,96px)] flex h-[calc(100vh-var(--header-height,96px))] items-center">
-              <div className="grid w-full grid-cols-[180px_minmax(0,1fr)_180px] items-center gap-4 lg:grid-cols-[200px_minmax(0,1fr)_200px] lg:gap-6">
+              <div className="grid w-full grid-cols-1 items-center gap-6 md:grid-cols-[190px_minmax(0,1fr)_190px] md:gap-4 lg:grid-cols-[240px_minmax(0,1fr)_240px] lg:gap-6">
                 {/* left column */}
-                <div className="flex flex-col gap-12">
+                <div className="hidden flex-col gap-12 md:flex">
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={`profile-${activePost}`}
@@ -551,7 +472,7 @@ export default function SocialMediaContent() {
                 </div>
 
                 {/* phone/app mockup */}
-                <div className="mx-auto w-full max-w-[min(30vw,420px)]">
+                <div className="mx-auto w-full max-w-[min(30vw,420px)] max-md:w-11/12 max-md:max-w-none">
                   <div
                     className="relative overflow-hidden rounded-2xl border border-line bg-paper shadow-xl"
                     style={{ aspectRatio: "9 / 16" }}
@@ -593,14 +514,10 @@ export default function SocialMediaContent() {
                       {storiesOpen && <StoryOverlay onClose={() => setStoriesOpen(false)} />}
                     </AnimatePresence>
                   </div>
-
-                  <p className="mt-3 text-center font-mono text-[10px] text-stone">
-                    💡 Kliknij logo w telefonie, aby zobaczyć Instastories
-                  </p>
                 </div>
 
                 {/* right column */}
-                <div className="flex flex-col gap-12">
+                <div className="hidden flex-col gap-12 md:flex">
                   <CalloutItem callout={staticRight} side="right" />
                   <AnimatePresence mode="wait">
                     <motion.div
@@ -614,65 +531,16 @@ export default function SocialMediaContent() {
                     </motion.div>
                   </AnimatePresence>
                 </div>
+
+                {/* mobile: hasła parami pod urządzeniem */}
+                <MobileCalloutPairs
+                  progress={progress}
+                  callouts={[staticRight, ...posts.flatMap((p) => [p.profile, p.left, p.right])]}
+                />
               </div>
             </div>
           </div>
 
-          {/* mobile: static app frame + stacked list */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="mt-12 md:hidden"
-          >
-            <div
-              className="relative mx-auto w-full max-w-[220px] overflow-hidden rounded-2xl border border-line bg-paper shadow-xl"
-              style={{ aspectRatio: "9 / 16" }}
-            >
-              <div className="absolute inset-x-0 top-0 z-10 flex h-6 items-center justify-between border-b border-line bg-paper px-3">
-                <span className="font-mono text-[7px] text-ink">{time}</span>
-                <div className="flex items-center gap-1">
-                  <span className="h-1 w-1 rounded-full bg-ink/50" />
-                  <span className="h-1 w-1 rounded-full bg-ink/50" />
-                </div>
-              </div>
-              <div className="absolute inset-x-0 top-6 z-10 flex h-9 items-center justify-between border-b border-line bg-cream px-3">
-                <div className="flex items-center gap-1.5">
-                  <StoryAvatar onClick={() => setStoriesOpen(true)} size="h-4 w-4" />
-                  <span className="font-display text-[9px] font-bold text-ink">studio.agencja</span>
-                </div>
-                <Heart className="h-3 w-3 text-ink-soft" />
-              </div>
-              <div className="absolute inset-x-0 bottom-0 top-[3.75rem] bg-linear-to-br from-ember/20 via-cream-dim to-paper" />
-
-              <AnimatePresence>
-                {storiesOpen && <StoryOverlay onClose={() => setStoriesOpen(false)} />}
-              </AnimatePresence>
-            </div>
-
-            <p className="mt-3 text-center font-mono text-[10px] text-stone">
-              💡 Kliknij logo w telefonie, aby zobaczyć Instastories
-            </p>
-
-            <div className="mt-8 space-y-5">
-              {[staticRight, ...posts.flatMap((p) => [p.profile, p.left, p.right])].map(
-                (callout, index) => (
-                  <div key={`${callout.title}-${index}`} className="flex items-start gap-3">
-                    <ArrowRight className="mt-1 h-3.5 w-3.5 shrink-0 text-ember" />
-                    <div>
-                      <p className="font-mono text-xs uppercase tracking-widest text-ember">
-                        {callout.title}
-                      </p>
-                      <p className="mt-1 text-sm leading-relaxed text-ink-soft">
-                        {callout.desc}
-                      </p>
-                    </div>
-                  </div>
-                ),
-              )}
-            </div>
-          </motion.div>
         </div>
       </section>
 

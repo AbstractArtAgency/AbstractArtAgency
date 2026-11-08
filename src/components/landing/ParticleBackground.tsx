@@ -23,7 +23,7 @@ export default function ParticleBackground() {
     renderer.setSize(width, height);
     // make the canvas visually subtle and non-interactive so foreground text remains the focus
     renderer.domElement.style.pointerEvents = "none";
-    renderer.domElement.style.opacity = "0.45"; // reduce visibility
+    renderer.domElement.style.opacity = "0.6"; // reduce visibility
     renderer.domElement.style.filter = "blur(2px) saturate(0.95)"; // light blur + slight desaturation
     mount.appendChild(renderer.domElement);
 
@@ -33,10 +33,10 @@ export default function ParticleBackground() {
     const originalPositions = new Float32Array(particleCount * 3);
     const colors = new Float32Array(particleCount * 3);
     const palette = [
-      new THREE.Color("#DE1F1A"), // ember accent
-      new THREE.Color("#E8625F"), // ember light
-      new THREE.Color("#1A1A1A"), // ink
-      new THREE.Color("#B5B5B5"), // warm stone
+      new THREE.Color("#DD1E1B"), // Czerwień AbstractArt
+      new THREE.Color("#F16001"), // Pomarańcz Żaru
+      new THREE.Color("#0E0907"), // Atrament
+      new THREE.Color("#8A170F"), // wino
     ];
 
     // create a circular sprite texture so points render round instead of square
@@ -84,7 +84,7 @@ export default function ParticleBackground() {
       transparent: true,
       alphaTest: 0.01,
       opacity: 0.35, // make particles much less prominent
-      blending: THREE.NormalBlending, // avoid bright additive glow
+      blending: THREE.NormalBlending, // light page background
       sizeAttenuation: true,
       depthWrite: false,
     });

@@ -1,9 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, ArrowRight } from "lucide-react";
 import { AnimatePresence, motion, useMotionValue, useTransform } from "framer-motion";
+import CapabilityIntro from "@/src/components/landing/CapabilityIntro";
+import CalloutItem from "@/src/components/landing/CalloutItem";
 import Contact from "@/src/components/landing/Contact";
+import StatementHeadline from "@/src/components/landing/StatementHeadline";
+import MobileCalloutPairs from "@/src/components/landing/MobileCalloutPairs";
 import Footer from "@/src/components/landing/Footer";
 import Navbar from "@/src/components/landing/Navbar";
 
@@ -20,7 +23,7 @@ type Stage = {
 
 const staticRight: Callout = {
   title: "Księga znaku",
-  desc: "Kompletny dokument z zasadami marki, z którego korzysta cały zespół i partnerzy.",
+  desc: "Kompletny dokument opisujący markę. Jest to spis wszystkich zasad marki.",
 };
 
 const stages: Stage[] = [
@@ -31,7 +34,7 @@ const stages: Stage[] = [
     },
     left: {
       title: "Warianty znaku",
-      desc: "Elastyczny system loga działa w każdym kontekście — od strony www po social media.",
+      desc: "Elastyczny system logo działający w każdym miejscu.",
     },
     right: {
       title: "Strefa ochronna",
@@ -49,7 +52,7 @@ const stages: Stage[] = [
     },
     right: {
       title: "Kody kolorów",
-      desc: "HEX, RGB i CMYK — gotowe do użycia w każdym medium.",
+      desc: "HEX, RGB i CMYK. Gotowe do użycia zarówno w sieci jak i w druku.",
     },
   },
   {
@@ -63,13 +66,13 @@ const stages: Stage[] = [
     },
     right: {
       title: "Hierarchia tekstu",
-      desc: "Jasne zasady wielkości i wag fontów porządkują każdy dokument.",
+      desc: "Jasne zasady wielkości i wag fontów porządkują każdy obrandowany dokument.",
     },
   },
   {
     logo: {
       title: "Zastosowania",
-      desc: "Księga znaku pokazuje markę w praktyce — na wizytówce, stronie i materiałach firmowych.",
+      desc: "Księga znaku pokazuje markę w praktyce. Na wizytówce, stronie i materiałach firmowych.",
     },
     left: {
       title: "Materiały firmowe",
@@ -77,33 +80,10 @@ const stages: Stage[] = [
     },
     right: {
       title: "Gotowy system",
-      desc: "Kompletna księga znaku, z której korzysta cały Twój zespół.",
+      desc: "Kompletny system, z którego korzysta cały Twój zespół.",
     },
   },
 ];
-
-function CalloutItem({ callout, side }: { callout: Callout; side: "left" | "right" }) {
-  return (
-    <div className={`flex items-start gap-2.5 ${side === "right" ? "flex-row-reverse text-right" : ""}`}>
-      <div className={`flex shrink-0 items-center gap-1 pt-1 ${side === "right" ? "flex-row-reverse" : ""}`}>
-        <div className="h-px w-4 bg-ember/50" />
-        {side === "left" ? (
-          <ArrowLeft className="h-3.5 w-3.5 text-ember" />
-        ) : (
-          <ArrowRight className="h-3.5 w-3.5 text-ember" />
-        )}
-      </div>
-      <div>
-        <p className="font-mono text-xs uppercase tracking-widest text-ember">
-          {callout.title}
-        </p>
-        <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">
-          {callout.desc}
-        </p>
-      </div>
-    </div>
-  );
-}
 
 const palette = [
   { hex: "#DE1F1A", border: false },
@@ -280,72 +260,22 @@ export default function BrandingContent() {
   const sectionYs = [section0Y, section1Y, section2Y, section3Y];
 
   return (
-    <main className="min-h-screen bg-cream">
+    <main className="theme-light min-h-screen bg-cream text-ink">
       <Navbar />
 
       {/* (01) intro */}
-      <section className="relative bg-cream pt-40 pb-20 md:pt-48 md:pb-28">
-        <div className="mx-auto w-full max-w-6xl px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="max-w-3xl font-display text-3xl font-bold uppercase leading-[1.15] text-ink sm:text-5xl md:text-6xl">
-              <span className="text-ember font-accent italic tracking-wide normal-case">Branding</span>
-            </h2>
-            <p className="mt-6 max-w-2xl text-base leading-relaxed text-ink-soft md:text-lg">
-              Projektujemy identyfikację wizualną, która buduje zaufanie i odzwierciedla twoje cele.
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="mt-10 flex flex-col gap-6 border-t border-line pt-10 md:flex-row md:items-end md:justify-between"
-          >
-            <p className="max-w-xs text-sm leading-relaxed text-ink-soft">
-              Zakres: logo, system wizualny, UI. Czas realizacji: 2-4 tygodni.
-            </p>
-            <p className="max-w-xs text-sm leading-relaxed text-ink-soft md:text-right">
-              Efekt: spójna identyfikacja Twojej marki, zebrana w jednej księdze znaku.
-            </p>
-            <span className="shrink-0 font-mono text-sm text-stone">(01)</span>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.6, delay: 0.15 }}
-            className="mt-10 flex flex-col items-start gap-4 sm:flex-row"
-          >
-            <a
-              href="/contact"
-              className="group relative overflow-hidden rounded-lg bg-ink px-8 py-4 font-mono text-sm text-cream"
-            >
-              <span className="absolute inset-0 origin-left scale-x-0 bg-ember transition-transform duration-500 ease-out group-hover:scale-x-100" />
-              <span className="relative z-10">Umów rozmowę →</span>
-            </a>
-            <a
-              href="/#capabilities"
-              className="group relative flex items-center justify-center gap-2 overflow-hidden rounded-lg border border-line bg-paper px-8 py-4 font-mono text-sm text-ink transition-colors duration-500 hover:border-ember"
-            >
-              <span className="absolute inset-0 origin-left scale-x-0 bg-ember transition-transform duration-500 ease-out group-hover:scale-x-100" />
-              <span className="relative z-10 transition-colors duration-500 group-hover:text-cream">
-                Wszystkie możliwości
-              </span>
-            </a>
-          </motion.div>
-        </div>
-      </section>
+      <CapabilityIntro
+        slug="branding"
+        eyebrow="Identyfikacja wizualna"
+        word="Branding"
+        note="od logo po UI"
+        highlight="rozpoznawalna w każdym miejscu"
+        description="Projektujemy identyfikację wizualną dla Twojej firmy. Działamy zarówno na samym początku istnienia marki jak i w trakcie jej funkcjonowania. Od logo, przez kolory, typografię i styl przekazywania treści. Przekazujemy komplet materiałów identyfikacyjnych. Tworzymy spójny system, dzięki któremu Twoja marka jest rozpoznawalna w każdym miejscu, w którym się pojawia."
+      />
 
       {/* (02) demo */}
-      <section className="relative border-t border-line bg-cream-dim py-20 md:py-28">
-        <div className="bg-grid pointer-events-none absolute inset-0 opacity-10" />
+      <section className="relative border-t border-line bg-cream-dim bg-paper-grain bg-size-[256px_256px] bg-fixed py-20 md:py-28">
+        <div className="bg-grid bg-size-[44px_44px] bg-fixed pointer-events-none absolute inset-0 opacity-10" />
 
         <div className="relative mx-auto w-full max-w-6xl px-6">
           <motion.div
@@ -353,26 +283,24 @@ export default function BrandingContent() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6 }}
-            className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between"
+            className="flex flex-col gap-6"
           >
-            <div className="flex shrink-0 items-center gap-3">
-              <span className="font-mono text-sm text-stone">(02)</span>
-              <span className="font-mono text-xs uppercase tracking-widest text-stone">
-                Jak projektujemy
-              </span>
-            </div>
-
-            <p className="max-w-xl font-display text-2xl font-bold leading-snug text-ink sm:text-4xl md:text-5xl">
-              Przewiń, żeby zobaczyć, jak powstaje księga znaku.
-            </p>
+            <StatementHeadline
+              note="przewiń ↓"
+              lines={[
+                { parts: ["Jak powstaje"] },
+                { indent: 1, parts: [{ brush: "spójna" }] },
+                { indent: 2, parts: [{ accent: "marka?" }] },
+              ]}
+            />
           </motion.div>
 
           {/* desktop: scroll-synced brand book with side callouts */}
-          <div ref={trackRef} className="relative mt-16 hidden md:block" style={{ height: "400vh" }}>
+          <div ref={trackRef} className="relative mt-12 md:mt-16" style={{ height: "400vh" }}>
             <div className="sticky top-[var(--header-height,96px)] flex h-[calc(100vh-var(--header-height,96px))] items-center">
-              <div className="grid w-full grid-cols-[180px_minmax(0,1fr)_180px] items-center gap-4 lg:grid-cols-[200px_minmax(0,1fr)_200px] lg:gap-6">
+              <div className="grid w-full grid-cols-1 items-center gap-6 md:grid-cols-[190px_minmax(0,1fr)_190px] md:gap-4 lg:grid-cols-[240px_minmax(0,1fr)_240px] lg:gap-6">
                 {/* left column */}
-                <div className="flex flex-col gap-12">
+                <div className="hidden flex-col gap-12 md:flex">
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={`logo-${activeStage}`}
@@ -398,7 +326,7 @@ export default function BrandingContent() {
                 </div>
 
                 {/* PDF brand book mockup */}
-                <div className="mx-auto w-full max-w-[min(50vw,520px)]">
+                <div className="mx-auto w-full max-w-[min(50vw,520px)] max-md:w-11/12 max-md:max-w-none">
                   <div
                     className="relative overflow-hidden rounded-2xl border border-line bg-paper shadow-xl"
                     style={{ aspectRatio: "4 / 5" }}
@@ -438,7 +366,7 @@ export default function BrandingContent() {
                 </div>
 
                 {/* right column */}
-                <div className="flex flex-col gap-12">
+                <div className="hidden flex-col gap-12 md:flex">
                   <CalloutItem callout={staticRight} side="right" />
                   <AnimatePresence mode="wait">
                     <motion.div
@@ -452,62 +380,16 @@ export default function BrandingContent() {
                     </motion.div>
                   </AnimatePresence>
                 </div>
+
+                {/* mobile: hasła parami pod urządzeniem */}
+                <MobileCalloutPairs
+                  progress={progress}
+                  callouts={[staticRight, ...stages.flatMap((s) => [s.logo, s.left, s.right])]}
+                />
               </div>
             </div>
           </div>
 
-          {/* mobile: static preview (fully revealed) + stacked list */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="mt-12 md:hidden"
-          >
-            <div
-              className="relative mx-auto w-full max-w-sm overflow-hidden rounded-2xl border border-line bg-paper shadow-xl"
-              style={{ aspectRatio: "4 / 5" }}
-            >
-              <div className="absolute inset-x-0 top-0 z-10 flex items-center gap-2 border-b border-line bg-paper px-3 py-2.5">
-                <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
-                <span className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
-                <span className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
-                <div className="mx-auto rounded-md bg-cream px-2.5 py-1 font-mono text-[9px] text-stone">
-                  księga-znaku.pdf
-                </div>
-              </div>
-              <div className="absolute inset-x-0 bottom-0 top-9 flex flex-col bg-paper px-4 py-3">
-                <div className="shrink-0 border-b border-line pb-1.5">
-                  <p className="font-accent text-base italic text-ink">Księga znaku</p>
-                  <p className="font-mono text-[6px] text-stone">AbstractArt — wytyczne marki</p>
-                </div>
-                <div className="mt-2 flex flex-1 flex-col justify-between">
-                  <SectionLogo />
-                  <SectionColors />
-                  <SectionTypography />
-                  <SectionApplications />
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-8 space-y-5">
-              {[staticRight, ...stages.flatMap((s) => [s.logo, s.left, s.right])].map(
-                (callout, index) => (
-                  <div key={`${callout.title}-${index}`} className="flex items-start gap-3">
-                    <ArrowRight className="mt-1 h-3.5 w-3.5 shrink-0 text-ember" />
-                    <div>
-                      <p className="font-mono text-xs uppercase tracking-widest text-ember">
-                        {callout.title}
-                      </p>
-                      <p className="mt-1 text-sm leading-relaxed text-ink-soft">
-                        {callout.desc}
-                      </p>
-                    </div>
-                  </div>
-                ),
-              )}
-            </div>
-          </motion.div>
         </div>
       </section>
 

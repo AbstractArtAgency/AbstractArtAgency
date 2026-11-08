@@ -1,233 +1,167 @@
 @import "tailwindcss";
 
+/*
+ * AbstractArt — identyfikacja wizualna (public/reference/AbstractArt_DESIGN.md).
+ * Wszystkie style komponentów są pisane klasami Tailwinda w JSX. Tutaj zostają
+ * tylko tokeny (@theme), przełącznik motywu jasnego i style bazowe przeglądarki.
+ *
+ * Kolory są semantyczne:
+ *   cream / cream-dim / paper  → powierzchnie (ciemne tło strony i karty)
+ *   ink / ink-soft / stone     → tekst (ciepła biel i jej wersje muted)
+ *   bone / coal                → stałe kolory marki niezależne od motywu
+ */
 @theme {
-  --color-cream: #ffffff; /* primary background - white */
-  --color-cream-dim: #f0f0f0; /* light gray for banded sections */
-  --color-paper: #fafafa; /* card / surface */
-  --color-ink: #1a1a1a; /* primary text - near-black gray */
-  --color-ink-soft: #464646; /* secondary text */
-  --color-stone: #8a8a8a; /* muted / tertiary text - gray */
-  --color-line: #e0e0e0; /* borders - light gray */
-  --color-ember: #dd1e1b; /* accent - matched to reference photo red */
-  --color-ember-dim: #ab1814; /* accent hover / darker */
-  --color-ember-light: #e8625f; /* accent glow / light */
-  --color-background: #ffffff;
-  --color-foreground: #1a1a1a;
-  --color-border: #e0e0e0;
-  --font-display: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --color-cream: #0e0907; /* tło strony — Atrament */
+  --color-cream-dim: #150c09; /* sekcje „przyciemnione” */
+  --color-paper: #1c120e; /* karty / powierzchnie */
+  --color-ink: #fff5e8; /* tekst główny — Ciepła Biel */
+  --color-ink-soft: #c9bfb3; /* tekst drugorzędny */
+  --color-stone: #968c83; /* tekst trzeciorzędny / etykiety */
+  --color-line: rgba(255, 245, 232, 0.16); /* linie 1px na ciemnym */
+  --color-ember: #dd1e1b; /* Czerwień AbstractArt */
+  --color-ember-dim: #b8160f;
+  --color-ember-light: #f16001; /* Pomarańcz Żaru */
+  --color-bone: #fff5e8; /* zawsze Ciepła Biel */
+  --color-coal: #0e0907; /* zawsze Atrament */
+  --color-coal-soft: #3a332e; /* tekst na Papierze */
+  --color-coal-muted: #4a423c; /* etykiety na Papierze */
+  --color-linen: #ece8e1; /* Papier — jasne sekcje */
+
+  --font-display: var(--font-archivo), "Helvetica Neue", Arial, sans-serif;
+  --font-sans: var(--font-archivo), "Helvetica Neue", Arial, sans-serif;
   --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
-  --font-accent: var(--font-instrument-serif), Georgia, serif;
+  --font-accent: var(--font-instrument-serif), "Times New Roman", serif;
+
+  /* nagłówki sekcji od breakpointu lg (poniżej: zwykła skala text-4xl, text-5xl…) */
+  --text-heading: clamp(32px, 5.2vw, 64px);
+  --text-heading-xl: clamp(44px, 6vw, 92px);
+  --text-display: clamp(40px, 6.6vw, 104px);
+
+  --tracking-display: -0.025em; /* nagłówki w wersalikach */
+  --tracking-accent: -0.02em; /* wyróżnienia Instrument Serif */
+
+  --spacing-gutter: clamp(20px, 4vw, 56px); /* boczny margines sekcji: px-gutter */
+
+  --breakpoint-xs: 25rem; /* 400px — duże telefony */
+
+  --background-image-hero: url("/brand/hero-bg.jpg");
+  --background-image-cta: url("/brand/cta-bg.jpg");
+  --background-image-paper-grain: url("/brand/paper-grain.png");
+  --background-image-noise: url("/brand/noise.svg");
+  /* statyczne światło na górze podstron (animacja tylko w hero strony głównej) */
+  --background-image-glow-top:
+    radial-gradient(55% 70% at 100% 0%, rgba(241, 96, 1, 0.16) 0%, rgba(221, 30, 27, 0.08) 45%, transparent 72%),
+    url("/brand/paper-grain.png");
 }
 
-* {
-  box-sizing: border-box;
-  border-color: var(--color-line);
+/* inline: kolor siatki jest rozwiązywany na elemencie, więc działa też w .theme-light */
+@theme inline {
+  --background-image-grid:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
 }
 
-html {
-  background: var(--color-cream);
+/* Jasny wariant (podstrony): te same tokeny przełożone na Papier. */
+.theme-light {
+  --color-cream: #ece8e1;
+  --color-cream-dim: #e4dfd6;
+  --color-paper: #f6f3ee;
+  --color-ink: #0e0907;
+  --color-ink-soft: #3a332e;
+  --color-stone: #655c55;
+  --color-line: rgba(14, 9, 7, 0.18);
+  --grid-line: rgba(14, 9, 7, 0.06);
 }
 
-body {
-  min-height: 100vh;
-  margin: 0;
-  background: var(--color-cream);
-  color: var(--color-ink);
-  font-family: var(--font-display);
+/* Ciemny wariant wewnątrz .theme-light (np. stopka na podstronach): przywraca tokeny z @theme. */
+.theme-dark {
+  --color-cream: #0e0907;
+  --color-cream-dim: #150c09;
+  --color-paper: #1c120e;
+  --color-ink: #fff5e8;
+  --color-ink-soft: #c9bfb3;
+  --color-stone: #968c83;
+  --color-line: rgba(255, 245, 232, 0.16);
+  --grid-line: rgba(255, 245, 232, 0.05);
 }
 
-::selection {
-  background-color: rgba(221, 30, 27, 0.22);
-  color: var(--color-ink);
-}
-
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--color-cream);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--color-ember);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-ink);
-}
-
-a:focus-visible,
-button:focus-visible,
-input:focus-visible,
-textarea:focus-visible {
-  border-radius: 4px;
-  outline: 2px solid var(--color-ember);
-  outline-offset: 4px;
-}
-
-.text-accent {
-  color: var(--color-ember);
-}
-
-.text-glow {
-  text-shadow:
-    0 0 40px rgba(222, 31, 26, 0.25),
-    0 0 80px rgba(222, 31, 26, 0.1);
-}
-
-.glass-panel {
-  border: 1px solid rgba(26, 26, 26, 0.09);
-  background: rgba(26, 26, 26, 0.02);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
-
-.glass-panel:hover {
-  border-color: rgba(222, 31, 26, 0.35);
-  background: rgba(26, 26, 26, 0.035);
-}
-
-.bg-grid {
-  background-image:
-    linear-gradient(rgba(222, 31, 26, 0.09) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(222, 31, 26, 0.09) 1px, transparent 1px);
-  background-size: 44px 44px;
-}
-
-.bg-dot-grid {
-  background-image: radial-gradient(rgba(26, 26, 26, 0.22) 1px, transparent 1.4px);
-  background-size: 16px 16px;
-}
-
-.bg-noise {
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
-}
-
-.perspective-1000 {
-  perspective: 1000px;
-}
-
-.preserve-3d {
-  transform-style: preserve-3d;
-}
-
-@keyframes marquee {
-  from {
-    transform: translateX(0);
+@layer base {
+  :root {
+    --grid-line: rgba(255, 245, 232, 0.05);
   }
-  to {
-    transform: translateX(-50%);
-  }
-}
 
-.animate-marquee {
-  animation: marquee 26s linear infinite;
-}
+  /* brak przewijania w bok: clip (a nie hidden) nie tworzy kontenera przewijania,
+     więc position: sticky w sekcjach dalej działa */
+  html,
+  body {
+    overflow-x: clip;
+    max-width: 100%;
+  }
 
-@keyframes blink-cursor {
-  0%,
-  45% {
-    opacity: 1;
-  }
-  50%,
-  95% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-.animate-blink {
-  animation: blink-cursor 1.1s step-end infinite;
-}
-
-@keyframes scroll-pulse {
-  0% {
-    transform: scaleY(0);
-    transform-origin: top;
-  }
-  50% {
-    transform: scaleY(1);
-    transform-origin: top;
-  }
-  51% {
-    transform-origin: bottom;
-  }
-  100% {
-    transform: scaleY(0);
-    transform-origin: bottom;
-  }
-}
-
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-15px);
-  }
-}
-
-@keyframes glow-pulse {
-  0%,
-  100% {
-    opacity: 0.5;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-
-@keyframes draw-line {
-  0% {
-    stroke-dashoffset: 1000;
-  }
-  100% {
-    stroke-dashoffset: 0;
-  }
-}
-
-@keyframes orbit {
-  from {
-    transform: rotate(0deg) translateX(40px) rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg) translateX(40px) rotate(-360deg);
-  }
-}
-
-.animate-scroll-line {
-  animation: scroll-pulse 2s ease-in-out infinite;
-}
-
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-
-.animate-glow-pulse {
-  animation: glow-pulse 3s ease-in-out infinite;
-}
-
-.animate-draw-line {
-  stroke-dasharray: 1000;
-  animation: draw-line 2.4s ease forwards;
-}
-
-.animate-orbit {
-  animation: orbit 8s linear infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
   *,
-  *::before,
-  *::after {
-    scroll-behavior: auto !important;
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+  ::before,
+  ::after {
+    border-color: var(--color-line);
+  }
+
+  ::selection {
+    background-color: rgba(221, 30, 27, 0.55);
+    color: var(--color-bone);
+  }
+
+  .theme-light ::selection {
+    background-color: rgba(221, 30, 27, 0.85);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ember-light);
+    outline-offset: 3px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--color-coal);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-ember);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-ember-light);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+      scroll-behavior: auto !important;
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* Hover linków tekstowych (TextLink): kopia napisu w kolorze hovera odsłaniana kołem
+   od miejsca wejścia kursora; po zjechaniu koło zwija się do miejsca wyjścia. */
+@layer components {
+  .text-link-fill {
+    clip-path: circle(0px at var(--tl-x, 50%) var(--tl-y, 50%));
+    transition: clip-path 700ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @media (hover: hover) {
+    [data-text-link]:hover .text-link-fill {
+      clip-path: circle(var(--tl-r, 150%) at var(--tl-x, 50%) var(--tl-y, 50%));
+    }
+  }
+
+  [data-text-link]:focus-visible .text-link-fill {
+    clip-path: circle(var(--tl-r, 150%) at var(--tl-x, 50%) var(--tl-y, 50%));
   }
 }

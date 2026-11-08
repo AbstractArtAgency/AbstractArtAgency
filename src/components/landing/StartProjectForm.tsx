@@ -1,16 +1,72 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { ChevronDown, Send, Terminal } from "lucide-react";
+import { Send } from "lucide-react";
 import { capabilities } from "@/src/lib/capabilities";
+import Button, { HoverFill, setOrigin } from "@/src/components/ui/Button";
+import { Field, RequiredMark, inputClass, textareaClass } from "@/src/components/ui/FormField";
 
-const budgetRanges = [
-  "Do 5 000 zł",
-  "5 000 – 15 000 zł",
-  "15 000 – 30 000 zł",
-  "30 000 zł +",
-];
+const budgetRanges = ["Do 5 000 zł", "5 000 – 15 000 zł", "15 000 – 30 000 zł", "30 000 zł +"];
+const serviceOptions = [...capabilities.map((capability) => capability.navLabel), "Inne"];
 
+/** Wybór jednej opcji jako pigułki (radio) — zamiast rozwijanej listy. */
+function ChoiceGroup({
+  name,
+  label,
+  options,
+  value,
+  onChange,
+}: {
+  name: string;
+  label: string;
+  options: string[];
+  value: string;
+  onChange: (value: string) => void;
+}) {
+  return (
+    <fieldset className="m-0 flex flex-col gap-3 border-0 p-0">
+      <legend className="mb-3 p-0 font-mono text-[10px] uppercase tracking-[0.18em] text-stone">
+        {label}
+        <RequiredMark />
+      </legend>
+      <div className="flex flex-wrap gap-2">
+        {options.map((option, index) => {
+          const checked = value === option;
+          return (
+            <label
+              key={option}
+              onPointerEnter={setOrigin}
+              onPointerLeave={setOrigin}
+              className={`group/btn relative isolate inline-flex min-h-10 cursor-pointer items-center overflow-hidden rounded-full border px-4 text-[15px] transition-colors duration-500 has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-ember ${
+                checked ? "border-ink bg-ink text-cream" : "border-ink/25 text-ink hover:border-ink"
+              }`}
+            >
+              <input
+                type="radio"
+                name={name}
+                value={option}
+                checked={checked}
+                onChange={() => onChange(option)}
+                required={index === 0}
+                className="absolute inset-0 z-10 cursor-pointer opacity-0"
+              />
+              {checked ? (
+                option
+              ) : (
+                // hover jak w przyciskach: kolor rozlewa się kołem od kursora, napis podmienia się z góry
+                <HoverFill fill="bg-ink" hoverText="text-cream">
+                  {option}
+                </HoverFill>
+              )}
+            </label>
+          );
+        })}
+      </div>
+    </fieldset>
+  );
+}
+
+/** Formularz „Rozpocznij projekt” w stylu formularzy kontakt / kariera. */
 export default function StartProjectForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -37,177 +93,107 @@ export default function StartProjectForm() {
   };
 
   return (
-    <div className="mx-auto w-full max-w-2xl overflow-hidden rounded-2xl border border-line bg-paper shadow-lg">
-      <div className="flex items-center gap-2 border-b border-line bg-cream px-6 py-3">
-        <div className="flex gap-1.5">
-          <div className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
-          <div className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
-          <div className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
-        </div>
-        <div className="ml-3 flex items-center gap-2 font-mono text-xs text-stone">
-          <Terminal className="h-3.5 w-3.5" />
-          abstractart@studio:~$ nowy-projekt --start
-        </div>
+    <div className="rounded-[18px] border border-ink/15 bg-paper p-6 md:p-10">
+      <div className="flex items-center gap-3">
+        <span aria-hidden="true" className="h-[3px] w-8 bg-ember" />
+        <h2 className="m-0 font-display text-xl font-extrabold font-stretch-110% uppercase leading-none tracking-[-0.02em] text-ink md:text-2xl">
+          Opowiedz nam o projekcie
+        </h2>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6 p-6 md:p-8">
-        <div className="grid gap-6 sm:grid-cols-2">
-          <div>
-            <label className="mb-2 block font-mono text-xs uppercase tracking-widest text-stone">
-              {"> "}Imię i nazwisko
-            </label>
+      <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-8">
+        <div className="grid gap-7 sm:grid-cols-2">
+          <Field label="Imię i nazwisko" htmlFor="project-name" required>
             <input
+              id="project-name"
               type="text"
               value={name}
               onChange={(event) => setName(event.target.value)}
               required
-              className="w-full rounded-lg border border-line bg-cream px-4 py-3 font-mono text-sm text-ink transition-colors focus:border-ember focus:outline-none"
+              className={inputClass}
               placeholder="Jak się nazywasz?"
             />
-          </div>
-
-          <div>
-            <label className="mb-2 block font-mono text-xs uppercase tracking-widest text-stone">
-              {"> "}Adres e-mail
-            </label>
+          </Field>
+          <Field label="Adres e-mail" htmlFor="project-email" required>
             <input
+              id="project-email"
               type="email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               required
-              className="w-full rounded-lg border border-line bg-cream px-4 py-3 font-mono text-sm text-ink transition-colors focus:border-ember focus:outline-none"
-              placeholder="ty@firma.pl"
+              className={inputClass}
+              placeholder="twoja@firma.pl"
             />
-          </div>
+          </Field>
         </div>
 
-        <div className="border-t border-line pt-6">
-          <p className="font-mono text-xs uppercase tracking-widest text-stone">
-            Dane firmy <span className="text-ember">— opcjonalne</span>
-          </p>
-          <p className="mb-5 mt-1.5 text-xs text-stone">
-            Nie masz jeszcze firmy ani marki i szukasz np. brandingu? Śmiało pomiń ten blok.
-          </p>
+        <ChoiceGroup name="service" label="Czego potrzebujesz" options={serviceOptions} value={service} onChange={setService} />
+        <ChoiceGroup name="budget" label="Budżet projektu" options={budgetRanges} value={budget} onChange={setBudget} />
 
-          <div className="grid gap-6 sm:grid-cols-2">
-            <div>
-              <label className="mb-2 block font-mono text-xs uppercase tracking-widest text-stone">
-                {"> "}Firma / marka
-              </label>
+        <div className="flex flex-col gap-7 border-t border-ink/15 pt-8">
+          <div>
+            <p className="m-0 font-mono text-[10px] uppercase tracking-[0.18em] text-stone">
+              Dane firmy <span className="text-ember">— opcjonalne</span>
+            </p>
+            <p className="m-0 mt-1.5 text-sm text-ink-soft">
+              Nie masz jeszcze firmy ani marki i szukasz np. brandingu? Śmiało pomiń ten blok.
+            </p>
+          </div>
+          <div className="grid gap-7 sm:grid-cols-2">
+            <Field label="Firma / marka" htmlFor="project-company">
               <input
+                id="project-company"
                 type="text"
                 value={company}
                 onChange={(event) => setCompany(event.target.value)}
-                className="w-full rounded-lg border border-line bg-cream px-4 py-3 font-mono text-sm text-ink transition-colors focus:border-ember focus:outline-none"
+                className={inputClass}
                 placeholder="Nazwa Twojej firmy"
               />
-            </div>
-
-            <div>
-              <label className="mb-2 block font-mono text-xs uppercase tracking-widest text-stone">
-                {"> "}Obszar działalności
-              </label>
+            </Field>
+            <Field label="Obszar działalności" htmlFor="project-industry">
               <input
+                id="project-industry"
                 type="text"
                 value={industry}
                 onChange={(event) => setIndustry(event.target.value)}
-                className="w-full rounded-lg border border-line bg-cream px-4 py-3 font-mono text-sm text-ink transition-colors focus:border-ember focus:outline-none"
+                className={inputClass}
                 placeholder="np. e-commerce, gastronomia, usługi B2B"
               />
-            </div>
+            </Field>
           </div>
-
-          <div className="mt-6">
-            <label className="mb-2 block font-mono text-xs uppercase tracking-widest text-stone">
-              {"> "}Czym zajmuje się Twoja firma
-            </label>
+          <Field label="Czym zajmuje się Twoja firma" htmlFor="project-company-desc">
             <textarea
+              id="project-company-desc"
               value={companyDesc}
               onChange={(event) => setCompanyDesc(event.target.value)}
               rows={2}
-              className="w-full resize-none rounded-lg border border-line bg-cream px-4 py-3 font-mono text-sm text-ink transition-colors focus:border-ember focus:outline-none"
+              className={textareaClass}
               placeholder="Krótko o profilu działalności"
             />
-          </div>
+          </Field>
         </div>
 
-        <div className="grid gap-6 border-t border-line pt-6 sm:grid-cols-2">
-          <div>
-            <label className="mb-2 block font-mono text-xs uppercase tracking-widest text-stone">
-              {"> "}Czego potrzebujesz
-            </label>
-            <div className="relative">
-              <select
-                value={service}
-                onChange={(event) => setService(event.target.value)}
-                required
-                className="w-full appearance-none rounded-lg border border-line bg-cream px-4 py-3 font-mono text-sm text-ink transition-colors focus:border-ember focus:outline-none"
-              >
-                <option value="" disabled>
-                  Wybierz zakres
-                </option>
-                {capabilities.map((capability) => (
-                  <option key={capability.slug} value={capability.navLabel}>
-                    {capability.navLabel}
-                  </option>
-                ))}
-                <option value="Inne">Inne</option>
-              </select>
-              <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-stone" />
-            </div>
-          </div>
-
-          <div>
-            <label className="mb-2 block font-mono text-xs uppercase tracking-widest text-stone">
-              {"> "}Budżet projektu
-            </label>
-            <div className="relative">
-              <select
-                value={budget}
-                onChange={(event) => setBudget(event.target.value)}
-                required
-                className="w-full appearance-none rounded-lg border border-line bg-cream px-4 py-3 font-mono text-sm text-ink transition-colors focus:border-ember focus:outline-none"
-              >
-                <option value="" disabled>
-                  Wybierz widełki
-                </option>
-                {budgetRanges.map((range) => (
-                  <option key={range} value={range}>
-                    {range}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-stone" />
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <label className="mb-2 block font-mono text-xs uppercase tracking-widest text-stone">
-            {"> "}Opowiedz nam o projekcie
-          </label>
+        <Field label="Opowiedz nam o projekcie" htmlFor="project-message" required>
           <textarea
+            id="project-message"
             value={message}
             onChange={(event) => setMessage(event.target.value)}
             required
             rows={4}
-            className="w-full resize-none rounded-lg border border-line bg-cream px-4 py-3 font-mono text-sm text-ink transition-colors focus:border-ember focus:outline-none"
-            placeholder="Jaki jest cel projektu? Co chcesz osiągnąć?"
+            className={textareaClass}
+            placeholder="Co chcesz osiągnąć?"
           />
-        </div>
+        </Field>
 
-        <button
-          type="submit"
-          className="group relative w-full overflow-hidden rounded-lg bg-ink px-8 py-4 font-mono text-sm text-cream transition-transform duration-300 disabled:opacity-50 md:w-auto"
-        >
-          <span className="absolute inset-0 origin-left scale-x-0 bg-ember transition-transform duration-500 ease-out group-hover:scale-x-100" />
-          <span className="relative z-10 flex items-center justify-center gap-2">
+        <div className="flex flex-col items-start gap-4 pt-2 sm:flex-row sm:items-center sm:justify-between">
+          <Button type="submit" variant="ink" className="w-full sm:w-auto">
             {submitted ? "Zgłoszenie wysłane" : "Rozpocznij projekt"}
-            {!submitted && (
-              <Send className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-            )}
-          </span>
-        </button>
+            {!submitted && <Send className="h-4 w-4" />}
+          </Button>
+          <p className="m-0 font-mono text-[10px] uppercase tracking-[0.16em] text-stone">
+            <span className="text-ember">*</span> pola obowiązkowe
+          </p>
+        </div>
       </form>
     </div>
   );

@@ -1,9 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, Play, Search } from "lucide-react";
+import { Play, Search } from "lucide-react";
 import { AnimatePresence, motion, useMotionValue, useTransform } from "framer-motion";
+import CapabilityIntro from "@/src/components/landing/CapabilityIntro";
+import CalloutItem from "@/src/components/landing/CalloutItem";
 import Contact from "@/src/components/landing/Contact";
+import StatementHeadline from "@/src/components/landing/StatementHeadline";
+import MobileCalloutPairs from "@/src/components/landing/MobileCalloutPairs";
 import Footer from "@/src/components/landing/Footer";
 import Navbar from "@/src/components/landing/Navbar";
 
@@ -20,8 +24,8 @@ type Screen = {
 };
 
 const staticRight: Callout = {
-  title: "Sieć reklamowa Google",
-  desc: "Docierasz do klientów w wielu miejscach jednocześnie — na blogach, YouTube i w wyszukiwarce.",
+  title: "Strategia płatnych reklam",
+  desc: "Docierasz do precyzyjnie zdefiniowanej grupy klientów poprzez reklamy targetowane.",
 };
 
 const screens: Screen[] = [
@@ -33,11 +37,11 @@ const screens: Screen[] = [
     },
     left: {
       title: "Baner reklamowy",
-      desc: "Wizualna reklama przyciąga wzrok podczas czytania treści na blogach i portalach.",
+      desc: "Wizualna reklama przyciąga wzrok podczas czytania treści na innych blogach i portalach.",
     },
     right: {
       title: "Precyzyjne targetowanie",
-      desc: "Trafiasz do osób zainteresowanych Twoją branżą, nie do przypadkowych czytelników.",
+      desc: "Trafiasz wyłącznie do osób zainteresowanych Twoją branżą, nie do przypadkowych czytelników.",
     },
   },
   {
@@ -48,7 +52,7 @@ const screens: Screen[] = [
     },
     left: {
       title: "Reklama przed filmem",
-      desc: "Twój przekaz dociera do widza, zanim obejrzy wybrane wideo.",
+      desc: "Twoja reklama może pojawiać sie przed filmami na YouTube.",
     },
     right: {
       title: "Płatność za obejrzenie",
@@ -63,37 +67,14 @@ const screens: Screen[] = [
     },
     left: {
       title: "Wynik sponsorowany",
-      desc: "Twoja oferta widoczna na samej górze wyników wyszukiwania Google.",
+      desc: "Twoja oferta jest widoczna na samej górze wyników wyszukiwania jako wynik sponsorowany.",
     },
     right: {
       title: "Płatność za kliknięcie",
-      desc: "Płacisz tylko za realne wejścia na Twoją stronę (model CPC).",
+      desc: "Płacisz tylko za wejścia na Twoją stronę (model CPC).",
     },
   },
 ];
-
-function CalloutItem({ callout, side }: { callout: Callout; side: "left" | "right" }) {
-  return (
-    <div className={`flex items-start gap-2.5 ${side === "right" ? "flex-row-reverse text-right" : ""}`}>
-      <div className={`flex shrink-0 items-center gap-1 pt-1 ${side === "right" ? "flex-row-reverse" : ""}`}>
-        <div className="h-px w-4 bg-ember/50" />
-        {side === "left" ? (
-          <ArrowLeft className="h-3.5 w-3.5 text-ember" />
-        ) : (
-          <ArrowRight className="h-3.5 w-3.5 text-ember" />
-        )}
-      </div>
-      <div>
-        <p className="font-mono text-xs uppercase tracking-widest text-ember">
-          {callout.title}
-        </p>
-        <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">
-          {callout.desc}
-        </p>
-      </div>
-    </div>
-  );
-}
 
 function AdTag({ className = "" }: { className?: string }) {
   return (
@@ -189,22 +170,22 @@ function ScreenSearchAd() {
           <AdTag />
           <p className="font-mono text-[7px] text-stone">abstractart.pl</p>
         </div>
-        <p className="font-display text-[10px] font-bold leading-tight text-[#1a0dab]">
+        <p className="font-display text-[10px] font-bold leading-tight text-[#8ab4f8]">
           AbstractArt — projektowanie stron internetowych
         </p>
         <p className="mt-0.5 font-mono text-[7px] leading-snug text-ink-soft">
           Projektujemy nowoczesne strony, które sprzedają. Bezpłatna wycena w 24h.
         </p>
         <div className="mt-1.5 flex gap-3">
-          <span className="font-mono text-[6px] text-[#1a0dab]">Cennik</span>
-          <span className="font-mono text-[6px] text-[#1a0dab]">Portfolio</span>
-          <span className="font-mono text-[6px] text-[#1a0dab]">Kontakt</span>
+          <span className="font-mono text-[6px] text-[#8ab4f8]">Cennik</span>
+          <span className="font-mono text-[6px] text-[#8ab4f8]">Portfolio</span>
+          <span className="font-mono text-[6px] text-[#8ab4f8]">Kontakt</span>
         </div>
       </div>
 
       <div className="opacity-50">
         <p className="font-mono text-[7px] text-stone">konkurencja.pl</p>
-        <p className="font-display text-[9px] font-bold text-[#1a0dab]">
+        <p className="font-display text-[9px] font-bold text-[#8ab4f8]">
           Inna firma — strony internetowe
         </p>
       </div>
@@ -281,72 +262,22 @@ export default function KampanieAdsContent() {
   const screenOpacities = [screen0Opacity, screen1Opacity, screen2Opacity];
 
   return (
-    <main className="min-h-screen bg-cream">
+    <main className="theme-light min-h-screen bg-cream text-ink">
       <Navbar />
 
       {/* (01) intro */}
-      <section className="relative bg-cream pt-40 pb-20 md:pt-48 md:pb-28">
-        <div className="mx-auto w-full max-w-6xl px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="max-w-3xl font-display text-3xl font-bold uppercase leading-[1.15] text-ink sm:text-5xl md:text-6xl">
-              Kampanie <span className="text-ember font-accent italic tracking-wide normal-case">Ads</span>
-            </h2>
-            <p className="mt-6 max-w-2xl text-base leading-relaxed text-ink-soft md:text-lg">
-              Tworzymy kampanie Google Ads i Meta Ads, aby twoja marka była jeszcze bardziej widoczna.
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="mt-10 flex flex-col gap-6 border-t border-line pt-10 md:flex-row md:items-end md:justify-between"
-          >
-            <p className="max-w-xs text-sm leading-relaxed text-ink-soft">
-              Zakres: Google Ads, Meta Ads. Rozliczenie: model efektywnościowy.
-            </p>
-            <p className="max-w-xs text-sm leading-relaxed text-ink-soft md:text-right">
-              Efekt: sponsorowane wyniki wyszukiwania i reklamy w social mediach.
-            </p>
-            <span className="shrink-0 font-mono text-sm text-stone">(01)</span>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.6, delay: 0.15 }}
-            className="mt-10 flex flex-col items-start gap-4 sm:flex-row"
-          >
-            <a
-              href="/contact"
-              className="group relative overflow-hidden rounded-lg bg-ink px-8 py-4 font-mono text-sm text-cream"
-            >
-              <span className="absolute inset-0 origin-left scale-x-0 bg-ember transition-transform duration-500 ease-out group-hover:scale-x-100" />
-              <span className="relative z-10">Umów rozmowę →</span>
-            </a>
-            <a
-              href="/#capabilities"
-              className="group relative flex items-center justify-center gap-2 overflow-hidden rounded-lg border border-line bg-paper px-8 py-4 font-mono text-sm text-ink transition-colors duration-500 hover:border-ember"
-            >
-              <span className="absolute inset-0 origin-left scale-x-0 bg-ember transition-transform duration-500 ease-out group-hover:scale-x-100" />
-              <span className="relative z-10 transition-colors duration-500 group-hover:text-cream">
-                Wszystkie możliwości
-              </span>
-            </a>
-          </motion.div>
-        </div>
-      </section>
+      <CapabilityIntro
+        slug="kampanie-ads"
+        eyebrow="Kampanie"
+        word="Ads"
+        note="tam, gdzie Twoi klienci"
+        highlight="żeby każda złotówka pracowała na wynik."
+        description="Tworzymy płatne kampanie Ads, dzięki którym Twoja marka pojawia się dokładnie tam, gdzie są Twoi klienci. Kampanie wykonujemy w serwisach takich jak: Google, Facebook, Instagram, LinkedIn itd. Przygotowujemy plan, precyzyjnie dobieramy grupy docelowe, nagrywamy i tworzymy treści i na bieżąco optymalizujemy budżet, żeby każda złotówka pracowała na wynik."
+      />
 
       {/* (02) demo */}
-      <section className="relative border-t border-line bg-cream-dim py-20 md:py-28">
-        <div className="bg-grid pointer-events-none absolute inset-0 opacity-10" />
+      <section className="relative border-t border-line bg-cream-dim bg-paper-grain bg-size-[256px_256px] bg-fixed py-20 md:py-28">
+        <div className="bg-grid bg-size-[44px_44px] bg-fixed pointer-events-none absolute inset-0 opacity-10" />
 
         <div className="relative mx-auto w-full max-w-6xl px-6">
           <motion.div
@@ -354,26 +285,25 @@ export default function KampanieAdsContent() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6 }}
-            className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between"
+            className="flex flex-col gap-6"
           >
-            <div className="flex shrink-0 items-center gap-3">
-              <span className="font-mono text-sm text-stone">(02)</span>
-              <span className="font-mono text-xs uppercase tracking-widest text-stone">
-                Jak projektujemy
-              </span>
-            </div>
-
-            <p className="max-w-xl font-display text-2xl font-bold leading-snug text-ink sm:text-4xl md:text-5xl">
-              Przewiń, żeby zobaczyć, gdzie pojawia się Twoja reklama.
-            </p>
+            <StatementHeadline
+              note="przewiń ↓"
+              lines={[
+                { parts: ["Jak działają"] },
+                { indent: 1, parts: [{ brush: "płatne" }] },
+                { parts: ["reklamy"] },
+                { indent: 2, parts: [{ accent: "Ads?" }] },
+              ]}
+            />
           </motion.div>
 
           {/* desktop: scroll-synced ad placements with side callouts */}
-          <div ref={trackRef} className="relative mt-16 hidden md:block" style={{ height: "320vh" }}>
+          <div ref={trackRef} className="relative mt-12 md:mt-16" style={{ height: "320vh" }}>
             <div className="sticky top-[var(--header-height,96px)] flex h-[calc(100vh-var(--header-height,96px))] items-center">
-              <div className="grid w-full grid-cols-[180px_minmax(0,1fr)_180px] items-center gap-4 lg:grid-cols-[200px_minmax(0,1fr)_200px] lg:gap-6">
+              <div className="grid w-full grid-cols-1 items-center gap-6 md:grid-cols-[190px_minmax(0,1fr)_190px] md:gap-4 lg:grid-cols-[240px_minmax(0,1fr)_240px] lg:gap-6">
                 {/* left column */}
-                <div className="flex flex-col gap-12">
+                <div className="hidden flex-col gap-12 md:flex">
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={`logo-${activeScreen}`}
@@ -399,7 +329,7 @@ export default function KampanieAdsContent() {
                 </div>
 
                 {/* mac window mockup */}
-                <div className="mx-auto w-full max-w-[min(58vw,960px)]">
+                <div className="mx-auto w-full max-w-[min(58vw,960px)] max-md:max-w-none">
                   <div
                     className="relative overflow-hidden rounded-2xl border border-line bg-paper shadow-xl"
                     style={{ aspectRatio: "16 / 10" }}
@@ -433,7 +363,7 @@ export default function KampanieAdsContent() {
                 </div>
 
                 {/* right column */}
-                <div className="flex flex-col gap-12">
+                <div className="hidden flex-col gap-12 md:flex">
                   <CalloutItem callout={staticRight} side="right" />
                   <AnimatePresence mode="wait">
                     <motion.div
@@ -447,53 +377,16 @@ export default function KampanieAdsContent() {
                     </motion.div>
                   </AnimatePresence>
                 </div>
+
+                {/* mobile: hasła parami pod urządzeniem */}
+                <MobileCalloutPairs
+                  progress={progress}
+                  callouts={[staticRight, ...screens.flatMap((s) => [s.logo, s.left, s.right])]}
+                />
               </div>
             </div>
           </div>
 
-          {/* mobile: static window + stacked list */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="mt-12 md:hidden"
-          >
-            <div
-              className="relative mx-auto w-full max-w-sm overflow-hidden rounded-2xl border border-line bg-paper shadow-xl"
-              style={{ aspectRatio: "16 / 10" }}
-            >
-              <div className="absolute inset-x-0 top-0 z-10 flex items-center gap-2 border-b border-line bg-paper px-3 py-2.5">
-                <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
-                <span className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
-                <span className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
-                <div className="mx-auto rounded-md bg-cream px-2.5 py-1 font-mono text-[9px] text-stone">
-                  {screens[0].url}
-                </div>
-              </div>
-              <div className="absolute inset-0 top-9">
-                <ScreenBlog />
-              </div>
-            </div>
-
-            <div className="mt-8 space-y-5">
-              {[staticRight, ...screens.flatMap((s) => [s.logo, s.left, s.right])].map(
-                (callout, index) => (
-                  <div key={`${callout.title}-${index}`} className="flex items-start gap-3">
-                    <ArrowRight className="mt-1 h-3.5 w-3.5 shrink-0 text-ember" />
-                    <div>
-                      <p className="font-mono text-xs uppercase tracking-widest text-ember">
-                        {callout.title}
-                      </p>
-                      <p className="mt-1 text-sm leading-relaxed text-ink-soft">
-                        {callout.desc}
-                      </p>
-                    </div>
-                  </div>
-                ),
-              )}
-            </div>
-          </motion.div>
         </div>
       </section>
 

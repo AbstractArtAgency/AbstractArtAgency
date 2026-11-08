@@ -1,9 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { AnimatePresence, motion, useMotionValue, useTransform } from "framer-motion";
+import CapabilityIntro from "@/src/components/landing/CapabilityIntro";
+import CalloutItem from "@/src/components/landing/CalloutItem";
 import Contact from "@/src/components/landing/Contact";
+import StatementHeadline from "@/src/components/landing/StatementHeadline";
+import MobileCalloutPairs from "@/src/components/landing/MobileCalloutPairs";
 import Footer from "@/src/components/landing/Footer";
 import Navbar from "@/src/components/landing/Navbar";
 
@@ -20,64 +24,64 @@ type Stage = {
 
 const staticRight: Callout = {
   title: "Wyniki wyszukiwania",
-  desc: "Widoczność w TOP wynikach Google oznacza realny, bezpłatny ruch na stronie.",
+  desc: "Widoczność na górze wyników wyszukiwania. Klienci znajdują Cię zawsze, kiedy Cię potrzebują.",
 };
 
 const stages: Stage[] = [
   {
     logo: {
-      title: "Słowo kluczowe",
-      desc: "Dobrze dobrana fraza to fundament całej strategii SEO.",
+      title: "Słowa kluczowe",
+      desc: "Dobrze dobrane frazy to fundament całej strategii SEO.",
     },
     left: {
-      title: "Audyt SEO",
-      desc: "Sprawdzamy stan strony i identyfikujemy obszary do poprawy.",
+      title: "Audyt",
+      desc: "Sprawdzamy stan strony i identyfikujemy obszary do poprawy. Czasami wystarczy tylko modyfikacja kodu.",
     },
     right: {
-      title: "Pozycja: 5",
-      desc: "Start — strona jest widoczna, ale ginie wśród konkurencji.",
+      title: "Rozwiązania",
+      desc: "Analizujemy dostępne rozwiązania i przystępujemy do działania.",
     },
   },
   {
     logo: {
       title: "Meta dane",
-      desc: "Tytuły i opisy stron wpływają na klikalność w wynikach.",
+      desc: "Tytuły i opisy stron wpływają na pozycję w wynikach.",
     },
     left: {
       title: "Optymalizacja treści",
       desc: "Dopasowujemy treść strony do intencji wyszukiwania użytkowników.",
     },
     right: {
-      title: "Pozycja: 4",
-      desc: "Pierwsze zmiany zaczynają przynosić efekty.",
+      title: "Efekty",
+      desc: "Już małe zmiany moga przynieść zauważalne efekty.",
     },
   },
   {
     logo: {
       title: "Szybkość strony",
-      desc: "Techniczne SEO wpływa bezpośrednio na ranking w Google.",
+      desc: "Poprawa prędkości strony wpływa bezpośrednio na jej ranking w wyszukiwarkach.",
     },
     left: {
       title: "Optymalizacja techniczna",
-      desc: "Poprawiamy szybkość ładowania i strukturę kodu strony.",
+      desc: "Poprawiamy strukturę kodu, który sprzyja indeksowaniu.",
     },
     right: {
-      title: "Pozycja: 3",
-      desc: "Strona wchodzi na pierwszą stronę wyników.",
+      title: "Wzrost",
+      desc: "Monitorujemy ruch i kontrolujemy osiągnięcie rezultatu.",
     },
   },
   {
     logo: {
       title: "Linkowanie",
-      desc: "Wartościowe odnośniki budują autorytet domeny w oczach Google.",
+      desc: "Wartościowe odnośniki budują autorytet domeny w oczach wyszukiwarek.",
     },
     left: {
-      title: "Link building",
-      desc: "Zdobywamy wartościowe linki z wiarygodnych źródeł.",
+      title: "Sitemap",
+      desc: "Wdrażamy plik sitemap.xml, który pozytywnie wpływa na analizę strony przez wyszukiwarki.",
     },
     right: {
-      title: "Pozycja: 2",
-      desc: "Coraz bliżej szczytu wyników wyszukiwania.",
+      title: "Artykuły",
+      desc: "Proponujemy dodawanie wpisów związanych z twoją działalnością generujących ruch.",
     },
   },
   {
@@ -90,34 +94,11 @@ const stages: Stage[] = [
       desc: "Śledzimy wyniki i stale doskonalimy strategię.",
     },
     right: {
-      title: "Pozycja: 1",
-      desc: "Twoja strona jest pierwszym wynikiem wyszukiwania.",
+      title: "Osiągnięcie celu",
+      desc: "Twoja strona jest pierwszym organicznym wynikiem wyszukiwania.",
     },
   },
 ];
-
-function CalloutItem({ callout, side }: { callout: Callout; side: "left" | "right" }) {
-  return (
-    <div className={`flex items-start gap-2.5 ${side === "right" ? "flex-row-reverse text-right" : ""}`}>
-      <div className={`flex shrink-0 items-center gap-1 pt-1 ${side === "right" ? "flex-row-reverse" : ""}`}>
-        <div className="h-px w-4 bg-ember/50" />
-        {side === "left" ? (
-          <ArrowLeft className="h-3.5 w-3.5 text-ember" />
-        ) : (
-          <ArrowRight className="h-3.5 w-3.5 text-ember" />
-        )}
-      </div>
-      <div>
-        <p className="font-mono text-xs uppercase tracking-widest text-ember">
-          {callout.title}
-        </p>
-        <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">
-          {callout.desc}
-        </p>
-      </div>
-    </div>
-  );
-}
 
 function MockSearchBar() {
   return (
@@ -185,7 +166,7 @@ function ResultRow({
       >
         <div className="flex items-center gap-1.5">
           {highlighted && (
-            <span className="rounded bg-ember px-1 py-0.5 font-mono text-[6px] font-bold uppercase text-cream">
+            <span className="rounded bg-ember px-1 py-0.5 font-mono text-[6px] font-bold uppercase text-bone">
               Ty
             </span>
           )}
@@ -193,7 +174,7 @@ function ResultRow({
         </div>
         <p
           className={`truncate font-display text-[10px] font-bold leading-tight ${
-            highlighted ? "text-ember" : "text-[#1a0dab]"
+            highlighted ? "text-ember" : "text-[#8ab4f8]"
           }`}
         >
           {result.title}
@@ -279,72 +260,22 @@ export default function PozycjonowanieContent() {
   const yourSiteY = useTransform(progress, (p) => (1 - p) * 4 * ROW_HEIGHT);
 
   return (
-    <main className="min-h-screen bg-cream">
+    <main className="theme-light min-h-screen bg-cream text-ink">
       <Navbar />
 
       {/* (01) intro */}
-      <section className="relative bg-cream pt-40 pb-20 md:pt-48 md:pb-28">
-        <div className="mx-auto w-full max-w-6xl px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="max-w-3xl font-display text-3xl font-bold uppercase leading-[1.15] text-ink sm:text-5xl md:text-6xl">
-              SEO i <span className="text-ember font-accent italic tracking-wide normal-case">pozycjonowanie</span>
-            </h2>
-            <p className="mt-6 max-w-2xl text-base leading-relaxed text-ink-soft md:text-lg">
-              Optymalizujemy strony internetowe pod kątem pozycjonowania w internecie.
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="mt-10 flex flex-col gap-6 border-t border-line pt-10 md:flex-row md:items-end md:justify-between"
-          >
-            <p className="max-w-xs text-sm leading-relaxed text-ink-soft">
-              Zakres: audyt, modyfikacja kodu, linkbuilding. Pierwsze efekty: 2-3 miesiące.
-            </p>
-            <p className="max-w-xs text-sm leading-relaxed text-ink-soft md:text-right">
-              Efekt: wzrost ruchu organicznego i wyższa pozycja w wynikach wyszukiwania.
-            </p>
-            <span className="shrink-0 font-mono text-sm text-stone">(01)</span>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.6, delay: 0.15 }}
-            className="mt-10 flex flex-col items-start gap-4 sm:flex-row"
-          >
-            <a
-              href="/contact"
-              className="group relative overflow-hidden rounded-lg bg-ink px-8 py-4 font-mono text-sm text-cream"
-            >
-              <span className="absolute inset-0 origin-left scale-x-0 bg-ember transition-transform duration-500 ease-out group-hover:scale-x-100" />
-              <span className="relative z-10">Umów rozmowę →</span>
-            </a>
-            <a
-              href="/#capabilities"
-              className="group relative flex items-center justify-center gap-2 overflow-hidden rounded-lg border border-line bg-paper px-8 py-4 font-mono text-sm text-ink transition-colors duration-500 hover:border-ember"
-            >
-              <span className="absolute inset-0 origin-left scale-x-0 bg-ember transition-transform duration-500 ease-out group-hover:scale-x-100" />
-              <span className="relative z-10 transition-colors duration-500 group-hover:text-cream">
-                Wszystkie możliwości
-              </span>
-            </a>
-          </motion.div>
-        </div>
-      </section>
+      <CapabilityIntro
+        slug="pozycjonowanie"
+        eyebrow="SEO i"
+        word="Pozycjonowanie"
+        note="wyżej w wyszukiwaniach ↑"
+        highlight="Zawsze wtedy, kiedy szukają tego co oferujesz, znajdą cię na pierwszym miejscu."
+        description="Optymalizujemy strony internetowe tak, żeby klienci znajdowali Cię na organicznie pierwszym miejscu w wyszukiwarkach. Zawsze wtedy, kiedy szukają tego co oferujesz, znajdą cię na pierwszym miejscu. Zaczynamy od audytu, poprawiamy kod, treści i szybkość strony, a potem systematycznie analizujemy jej widoczność."
+      />
 
       {/* (02) demo */}
-      <section className="relative border-t border-line bg-cream-dim py-20 md:py-28">
-        <div className="bg-grid pointer-events-none absolute inset-0 opacity-10" />
+      <section className="relative border-t border-line bg-cream-dim bg-paper-grain bg-size-[256px_256px] bg-fixed py-20 md:py-28">
+        <div className="bg-grid bg-size-[44px_44px] bg-fixed pointer-events-none absolute inset-0 opacity-10" />
 
         <div className="relative mx-auto w-full max-w-6xl px-6">
           <motion.div
@@ -352,26 +283,25 @@ export default function PozycjonowanieContent() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6 }}
-            className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between"
+            className="flex flex-col gap-6"
           >
-            <div className="flex shrink-0 items-center gap-3">
-              <span className="font-mono text-sm text-stone">(02)</span>
-              <span className="font-mono text-xs uppercase tracking-widest text-stone">
-                Jak projektujemy
-              </span>
-            </div>
-
-            <p className="max-w-xl font-display text-2xl font-bold leading-snug text-ink sm:text-4xl md:text-5xl">
-              Przewiń, żeby zobaczyć, jak rośnie pozycja w Google.
-            </p>
+            <StatementHeadline
+              note="przewiń ↓"
+              lines={[
+                { parts: ["Zobacz jak"] },
+                { indent: 1, parts: ["wygląda ", { brush: "dobra" }] },
+                { parts: ["optymalizacja"] },
+                { indent: 2, parts: [{ accent: "strony." }] },
+              ]}
+            />
           </motion.div>
 
           {/* desktop: scroll-synced search results with side callouts */}
-          <div ref={trackRef} className="relative mt-16 hidden md:block" style={{ height: "400vh" }}>
+          <div ref={trackRef} className="relative mt-12 md:mt-16" style={{ height: "400vh" }}>
             <div className="sticky top-[var(--header-height,96px)] flex h-[calc(100vh-var(--header-height,96px))] items-center">
-              <div className="grid w-full grid-cols-[180px_minmax(0,1fr)_180px] items-center gap-4 lg:grid-cols-[200px_minmax(0,1fr)_200px] lg:gap-6">
+              <div className="grid w-full grid-cols-1 items-center gap-6 md:grid-cols-[190px_minmax(0,1fr)_190px] md:gap-4 lg:grid-cols-[240px_minmax(0,1fr)_240px] lg:gap-6">
                 {/* left column */}
-                <div className="flex flex-col gap-12">
+                <div className="hidden flex-col gap-12 md:flex">
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={`logo-${activeStage}`}
@@ -399,7 +329,7 @@ export default function PozycjonowanieContent() {
                 {/* google search results mockup — taller aspect below lg where the grid columns
                     leave less width, so all 5 result rows stay visible; reverts to the wider
                     16:10 frame once there's enough room (lg+) */}
-                <div className="mx-auto w-full max-w-[min(58vw,960px)]">
+                <div className="mx-auto w-full max-w-[min(58vw,960px)] max-md:max-w-none">
                   <div className="relative aspect-[5/6] max-h-[560px] overflow-hidden rounded-2xl border border-line bg-paper shadow-xl xl:aspect-16/10">
 
                     {/* titlebar */}
@@ -447,7 +377,7 @@ export default function PozycjonowanieContent() {
                 </div>
 
                 {/* right column */}
-                <div className="flex flex-col gap-12">
+                <div className="hidden flex-col gap-12 md:flex">
                   <CalloutItem callout={staticRight} side="right" />
                   <AnimatePresence mode="wait">
                     <motion.div
@@ -461,71 +391,16 @@ export default function PozycjonowanieContent() {
                     </motion.div>
                   </AnimatePresence>
                 </div>
+
+                {/* mobile: hasła parami pod urządzeniem */}
+                <MobileCalloutPairs
+                  progress={progress}
+                  callouts={[staticRight, ...stages.flatMap((s) => [s.logo, s.left, s.right])]}
+                />
               </div>
             </div>
           </div>
 
-          {/* mobile: static preview + stacked list */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="mt-12 md:hidden"
-          >
-            <div
-              className="relative mx-auto w-full max-w-sm overflow-hidden rounded-2xl border border-line bg-paper shadow-xl"
-              style={{ aspectRatio: "16 / 10" }}
-            >
-              <div className="absolute inset-x-0 top-0 z-10 flex items-center gap-2 border-b border-line bg-paper px-3 py-2.5">
-                <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
-                <span className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
-                <span className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
-                <div className="mx-auto rounded-md bg-cream px-2.5 py-1 font-mono text-[9px] text-stone">
-                  google.com/search
-                </div>
-              </div>
-              <div className="absolute inset-x-0 top-9 z-10 flex h-11 items-center border-b border-line bg-cream px-3">
-                <div className="flex w-full items-center gap-1.5 rounded-full border border-line bg-paper px-2.5 py-1">
-                  <Search className="h-2.5 w-2.5 shrink-0 text-stone" />
-                  <span className="truncate font-mono text-[7px] text-ink">
-                    projektowanie stron internetowych warszawa
-                  </span>
-                </div>
-              </div>
-              <div
-                className="absolute inset-x-0 bottom-0 overflow-hidden bg-cream px-3 py-2"
-                style={{ top: "5rem" }}
-              >
-                {[...competitors, yourSite].map((result, index) => (
-                  <ResultRow
-                    key={result.url}
-                    result={result}
-                    height={38}
-                    highlighted={index === competitors.length}
-                  />
-                ))}
-              </div>
-            </div>
-
-            <div className="mt-8 space-y-5">
-              {[staticRight, ...stages.flatMap((s) => [s.logo, s.left, s.right])].map(
-                (callout, index) => (
-                  <div key={`${callout.title}-${index}`} className="flex items-start gap-3">
-                    <ArrowRight className="mt-1 h-3.5 w-3.5 shrink-0 text-ember" />
-                    <div>
-                      <p className="font-mono text-xs uppercase tracking-widest text-ember">
-                        {callout.title}
-                      </p>
-                      <p className="mt-1 text-sm leading-relaxed text-ink-soft">
-                        {callout.desc}
-                      </p>
-                    </div>
-                  </div>
-                ),
-              )}
-            </div>
-          </motion.div>
         </div>
       </section>
 

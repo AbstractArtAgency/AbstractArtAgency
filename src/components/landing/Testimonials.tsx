@@ -30,7 +30,7 @@ const testimonials = [
 export default function Testimonials() {
   return (
     <section className="relative overflow-hidden border-y border-line bg-cream py-24">
-      <div className="bg-grid pointer-events-none absolute inset-0 opacity-30" />
+      <div className="bg-grid bg-size-[44px_44px] pointer-events-none absolute inset-0 opacity-30" />
 
       <div className="relative mx-auto max-w-7xl px-6">
         <motion.div
@@ -39,8 +39,8 @@ export default function Testimonials() {
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.7 }}
         >
-          <h2 className="max-w-2xl font-display text-4xl font-bold tracking-tight text-ink md:text-6xl">
-            Co mówią nasi <span className="text-ember font-accent italic tracking-wide">klienci</span>
+          <h2 className="max-w-2xl font-display text-4xl font-extrabold font-stretch-110% uppercase leading-[0.95] tracking-display text-ink md:text-6xl">
+            Co mówią nasi <span className="text-ember font-accent font-normal italic tracking-accent normal-case">klienci</span>
           </h2>
           <p className="mt-4 max-w-xl text-lg leading-relaxed text-ink-soft">
             Nie musisz wierzyć nam na słowo - zobacz, co mówią osoby, z którymi mieliśmy okazję współpracować.

@@ -1,90 +1,62 @@
 "use client";
 
-import { ImageIcon } from "lucide-react";
-import { motion } from "framer-motion";
+import { useState } from "react";
+import Image from "next/image";
+import { AnimatePresence, motion } from "framer-motion";
 import Contact from "@/src/components/landing/Contact";
 import Footer from "@/src/components/landing/Footer";
 import Navbar from "@/src/components/landing/Navbar";
+import Button from "@/src/components/ui/Button";
+import { ArrowUpRight } from "./Brand";
+
+const ease = [0.16, 1, 0.3, 1] as const;
 
 const team = [
   {
     initials: "JP",
     name: "Jakub Przyciasa",
     role: "Founder & Marketing Lead",
-    rotate: -6,
-    shift: "mt-0",
-    width: "w-44 sm:w-52 md:w-60",
+    rotate: -3,
+    background: "/brand/gradient-red.jpg",
   },
   {
     initials: "DŚ",
     name: "Dawid Ślusarczyk",
     role: "Head of Design",
-    rotate: 4,
-    shift: "mt-10 sm:mt-16",
-    width: "w-36 sm:w-44 md:w-48",
+    rotate: 2,
+    background: "/brand/gradient-orange.jpg",
   },
   {
     initials: "JW",
     name: "Jan Walicki",
     role: "Lead Developer",
-    rotate: -3,
-    shift: "-mt-4 sm:mt-4",
-    width: "w-40 sm:w-48 md:w-56",
+    rotate: -2,
+    background: "/brand/gradient-wine.jpg",
   },
   {
     initials: "JT",
     name: "Julia Tenerle",
     role: "Social Media & Content Manager",
-    rotate: 7,
-    shift: "mt-6 sm:-mt-2",
-    width: "w-36 sm:w-40 md:w-48",
+    rotate: 3,
+    background: "/brand/gradient-red.jpg",
   },
 ];
 
-function Polaroid({
-  className = "",
-  caption,
-  subCaption,
-}: {
-  className?: string;
-  caption?: string;
-  subCaption?: string;
-}) {
+/** Karta osoby w stylu kart realizacji: gradient marki, rola u góry, inicjały i imię na dole. */
+function TeamCard({ member }: { member: (typeof team)[number] }) {
   return (
-    <div className={`border-4 border-paper bg-paper shadow-xl ${className}`}>
-      <div className="flex aspect-4/5 items-center justify-center bg-linear-to-br from-ember/15 via-cream-dim to-paper">
-        <ImageIcon className="h-6 w-6 text-stone/50" />
-      </div>
-      {caption && (
-        <div className="px-2 pb-2 pt-2 text-center">
-          <p className="font-accent text-sm italic text-ink-soft">{caption}</p>
-          {subCaption && (
-            <p className="mt-0.5 font-mono text-[10px] uppercase tracking-widest text-stone">
-              {subCaption}
-            </p>
-          )}
+    <div className="relative isolate aspect-4/5 w-full overflow-hidden rounded-[18px] bg-[#3A0A06] text-bone shadow-[0_30px_60px_rgba(14,9,7,0.3)]">
+      <Image src={member.background} alt="" fill sizes="(min-width: 1024px) 288px, 240px" className="-z-1 object-cover" />
+      <div className="pointer-events-none absolute inset-0 -z-1 bg-noise opacity-20 mix-blend-overlay" />
+      <div className="flex h-full flex-col justify-between p-4 sm:p-5">
+        <div className="flex justify-between gap-3 font-mono text-[9px] uppercase tracking-[0.12em] sm:text-[10px]">
         </div>
-      )}
-    </div>
-  );
-}
-
-function TeamPolaroid({ member }: { member: (typeof team)[number] }) {
-  return (
-    <div
-      className={`${member.shift} ${member.width} transition-transform duration-300 hover:-translate-y-1 hover:rotate-0`}
-      style={{ transform: `rotate(${member.rotate}deg)` }}
-    >
-      <div className="border-4 border-paper bg-paper shadow-xl">
-        <div className="flex aspect-4/5 items-center justify-center bg-linear-to-br from-ember/15 via-cream-dim to-paper">
-          <span className="font-display text-5xl font-bold text-ember/30 sm:text-6xl">
+        <div className="flex flex-col gap-2">
+          <span aria-hidden="true" className="font-display text-6xl font-extrabold font-stretch-112% leading-none tracking-[-0.04em] text-bone/30">
             {member.initials}
           </span>
-        </div>
-        <div className="px-3 pb-3 pt-2 text-center">
-          <p className="font-display text-sm font-bold text-ink">{member.name}</p>
-          <p className="mt-1 font-mono text-[10px] uppercase tracking-wide text-stone">
-            {member.role}
+          <p className="m-0 text-xl font-extrabold font-stretch-110% uppercase leading-[0.95] tracking-[-0.02em]">
+            {member.name}
           </p>
         </div>
       </div>
@@ -92,109 +64,165 @@ function TeamPolaroid({ member }: { member: (typeof team)[number] }) {
   );
 }
 
+/** Środek koła hovera = punkt wejścia/wyjścia kursora, liczony względem imienia (jak w <TextLink>). */
+function setFillOrigin(event: React.PointerEvent<HTMLElement>) {
+  const label = event.currentTarget.querySelector<HTMLElement>("[data-text-link-label]");
+  if (!label) return;
+  const rect = label.getBoundingClientRect();
+  const x = event.clientX - rect.left;
+  const y = event.clientY - rect.top;
+  // kursor może wejść w wiersz daleko od imienia — promień sięga najdalszego rogu napisu
+  const r = Math.max(
+    Math.hypot(x, y),
+    Math.hypot(rect.width - x, y),
+    Math.hypot(x, rect.height - y),
+    Math.hypot(rect.width - x, rect.height - y),
+  );
+  const style = event.currentTarget.style;
+  style.setProperty("--tl-x", `${x}px`);
+  style.setProperty("--tl-y", `${y}px`);
+  style.setProperty("--tl-r", `${Math.ceil(r)}px`);
+}
+
+/**
+ * Zespół jako lista: (01) Imię … (Rola). Aktywna osoba jest wyraźna, pozostałe przygaszone;
+ * nad listą „unosi się” jej karta (desktop) — na mobile karta stoi nad listą.
+ */
+function TeamList() {
+  const [active, setActive] = useState(0);
+  const member = team[active];
+
+  const card = (
+    <AnimatePresence initial={false}>
+      <motion.div
+        key={member.name}
+        initial={{ opacity: 0, y: -12, scale: 0.96, rotate: member.rotate - 2 }}
+        animate={{ opacity: 1, y: 0, scale: 1, rotate: member.rotate }}
+        exit={{ opacity: 0, y: 12, scale: 0.98, transition: { duration: 0.15, ease } }}
+        transition={{ duration: 0.3, ease }}
+        className="absolute inset-0"
+      >
+        <TeamCard member={member} />
+      </motion.div>
+    </AnimatePresence>
+  );
+
+  return (
+    <div className="relative">
+      {/* mobile: karta nad listą */}
+      <div className="relative mx-auto mb-10 aspect-4/5 w-52 md:hidden">{card}</div>
+
+      <ul className="m-0 list-none border-t border-ink/15 p-0">
+        {team.map((person, index) => {
+          const isActive = index === active;
+          return (
+            <li key={person.name} className="border-b border-ink/15">
+              <button
+                type="button"
+                aria-pressed={isActive}
+                data-text-link=""
+                onPointerEnter={setFillOrigin}
+                onPointerLeave={setFillOrigin}
+                onMouseEnter={() => setActive(index)}
+                onFocus={() => setActive(index)}
+                onClick={() => setActive(index)}
+                className={`grid w-full grid-cols-1 items-baseline gap-x-4 gap-y-1 py-4 text-left transition-colors duration-300 sm:grid-cols-[minmax(0,1fr)_auto] md:gap-x-6 md:py-5 ${
+                  isActive ? "text-ink" : "text-ink/30 hover:text-ink/60"
+                }`}
+              >
+                <span className="min-w-0 truncate font-display text-2xl font-extrabold font-stretch-110% uppercase leading-none tracking-[-0.02em] sm:text-4xl md:text-5xl">
+                  {/* hover jak w linkach tekstowych: czerwień rozlewa się kołem od kursora (.text-link-fill w globals.css) */}
+                  <span data-text-link-label="" className="relative inline-block">
+                    {person.name}
+                    <span aria-hidden="true" className="text-link-fill pointer-events-none absolute inset-0 text-ember">
+                      {person.name}
+                    </span>
+                  </span>
+                </span>
+                <span className="font-mono text-[10px] uppercase tracking-[0.12em] sm:text-[11px]">
+                  ( <span className={isActive ? "underline underline-offset-4" : ""}>{person.role}</span> )
+                </span>
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+
+      {/* desktop: karta unosząca się nad środkiem listy */}
+      <div className="pointer-events-none absolute left-1/2 top-1/2 z-10 hidden aspect-4/5 w-56 -translate-x-1/2 -translate-y-1/2 md:block lg:w-64">
+        {card}
+      </div>
+    </div>
+  );
+}
+
 export default function AboutContent() {
   return (
-    <main className="min-h-screen bg-cream">
+    <main className="theme-light min-h-screen bg-cream text-ink">
       <Navbar />
 
-      <section className="relative overflow-hidden bg-cream pt-40 pb-16 md:pt-48 md:pb-20">
-        <div className="bg-grid pointer-events-none absolute inset-0 opacity-20" />
+      {/* hero: zespół */}
+      <section className="bg-glow-top bg-size-[auto,256px_256px] bg-fixed relative bg-cream pt-[calc(var(--header-height,96px)+3rem)] pb-20 md:pt-[calc(var(--header-height,96px)+4.5rem)] md:pb-28">
+        <div className="bg-grid bg-size-[44px_44px] bg-fixed pointer-events-none absolute inset-0 opacity-10" />
 
         <div className="relative mx-auto w-full max-w-6xl px-6">
-          <motion.div
+          {/* wyśrodkowany nagłówek */}
+          <motion.h1
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6 }}
-            className="relative"
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease }}
+            className="m-0 text-center font-display text-[1.4rem] font-extrabold font-stretch-110% uppercase leading-[0.95] tracking-[-0.02em] text-ink [overflow-wrap:anywhere] sm:text-5xl md:text-6xl"
           >
-            <h1 className="max-w-3xl font-display text-3xl font-bold leading-[1.15] text-ink sm:text-5xl md:text-6xl">
-              Kim <span className="text-ember font-accent italic tracking-wide normal-case">my</span> jesteśmy?
-            </h1>
-            <p className="mt-6 max-w-2xl text-base leading-relaxed text-ink-soft md:text-lg">
-              Wykorzystując nasze umiejętności i doświadczenie chcemy pomagać firmom w osiąganiu ich celów i dalszym rozwoju.
-            </p>
+            Multidyscyplinarni kreatywni
+            <br />
+            <span className="bg-ember px-[0.06em] text-bone [box-decoration-break:clone]">profesjonaliści.</span>
+          </motion.h1>
 
-            <div className="absolute -right-4 top-0 hidden w-40 -translate-y-4 rotate-3 md:block lg:w-48">
-              <Polaroid className="w-full" />
-            </div>
-          </motion.div>
+          <div className="mt-14 md:mt-20">
+            <TeamList />
+          </div>
 
+          {/* notka o zespole */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="mt-10 flex flex-col gap-6 border-t border-line pt-10 md:flex-row md:items-end md:justify-between"
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.6, ease }}
+            className="mx-auto mt-14 flex max-w-3xl flex-col items-center gap-5 text-center md:mt-20"
           >
-            <p className="max-w-xs text-sm leading-relaxed text-ink-soft">
-              AbstractArt to zespół kreatywnych i ambitnych ludzi, gotowych do podejmowania wyzwań i tworzenia innowacyjnych rozwiązań.
+            <span aria-hidden="true" className="h-[3px] w-10 bg-ember" />
+            <p className="m-0 font-display text-lg font-bold uppercase leading-[1.2] tracking-[-0.01em] text-ink sm:text-2xl">
+              Nasz zespół tworzą freelancerzy. Do
+              każdego projektu dobieramy ludzi, których umiejętności najlepiej pasują do potrzeb danego zlecenia.
             </p>
-            <p className="max-w-xs text-sm leading-relaxed text-ink-soft md:text-right">
-              Naszym celem jest współpraca z markami, które dzięki nam będą nie do przeoczenia w internecie.
-            </p>
-            <span className="shrink-0 font-mono text-sm text-stone">(01)</span>
           </motion.div>
         </div>
       </section>
 
-      <section className="relative border-t border-line bg-cream py-20 md:py-28">
+      {/* (03) kariera */}
+      <section className="relative border-t border-line bg-cream py-16 md:py-24">
         <div className="mx-auto w-full max-w-6xl px-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6 }}
-            className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between"
+            transition={{ duration: 0.6, ease }}
+            className="flex flex-col items-start gap-8 rounded-[18px] bg-ink p-8 text-cream md:flex-row md:items-end md:justify-between md:p-12"
           >
-            <div className="flex shrink-0 items-center gap-3">
-              <span className="font-mono text-sm text-stone">(02)</span>
-              <span className="font-mono text-xs uppercase tracking-widest text-stone">
-                Nasz zespół
-              </span>
+            <div className="flex max-w-2xl flex-col gap-5">
+              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-cream/60">Kariera</span>
+              <h2 className="m-0 font-display text-3xl font-extrabold font-stretch-110% uppercase leading-[0.95] tracking-[-0.02em] sm:text-5xl">
+                Masz coś do{" "}
+                <span className="bg-ember px-[0.06em] text-bone [box-decoration-break:clone]">zaoferowania?</span>
+              </h2>
+              <p className="m-0 max-w-md text-[15px] leading-snug text-cream/75">
+                Szukamy ludzi, którzy chcą tworzyć rzeczy, niecodzienne i niepowtarzalne. Dołącz do naszego zespołu.
+              </p>
             </div>
-
-            <p className="max-w-xl font-display text-2xl font-bold leading-snug text-ink sm:text-4xl md:text-5xl">
-              Multidyscyplinarni kreatywni profesjonaliści.
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="mt-16 flex flex-wrap items-start justify-center gap-6 sm:justify-between md:mt-24 md:gap-8"
-          >
-            {team.map((member) => (
-              <TeamPolaroid key={member.name} member={member} />
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      <section className="relative border-t border-line bg-cream py-16 md:py-20">
-        <div className="mx-auto w-full max-w-5xl px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6 }}
-            className="flex flex-col items-center gap-6 border border-line bg-paper px-8 py-12 text-center"
-          >
-            <p className="font-display text-2xl font-bold text-ink sm:text-3xl">
-              Masz coś do zaoferowania?
-            </p>
-            <p className="max-w-md text-sm leading-relaxed text-ink-soft">
-              Szukamy ludzi, którzy chcą tworzyć rzeczy, z których będziemy dumni. Dołącz do zespołu AbstractArt.
-            </p>
-            <a
-              href="/careers"
-              className="group relative mt-2 inline-flex items-center gap-2 overflow-hidden rounded-lg bg-ember px-6 py-3 font-mono text-sm text-cream"
-            >
-              <span className="absolute inset-0 origin-left scale-x-0 bg-ink transition-transform duration-500 ease-out group-hover:scale-x-100" />
-              <span className="relative z-10">Dołącz do nas →</span>
-            </a>
+            <Button href="/careers" variant="primary" className="shrink-0">
+              Dołącz do nas
+              <ArrowUpRight />
+            </Button>
           </motion.div>
         </div>
       </section>
