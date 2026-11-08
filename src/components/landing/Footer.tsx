@@ -82,7 +82,7 @@ export default function Footer() {
             <Link href="/" className="flex w-fit items-center gap-3">
               <LogoMark height={28} alt="AbstractArt" />
               <span className="text-[19px] font-bold tracking-[-0.01em] text-ink">
-                AbstractArt<span className="text-ember">.</span>
+                AbstractArt
               </span>
             </Link>
 
