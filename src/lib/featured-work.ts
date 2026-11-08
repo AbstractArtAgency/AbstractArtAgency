@@ -1,4 +1,5 @@
 import type { StaticImageData } from "next/image";
+import { brandImage, media } from "./media";
 
 export type FeaturedWork = {
   /** etykieta w lewym górnym rogu karty */
@@ -23,7 +24,7 @@ export type FeaturedWork = {
 };
 
 /** Jedna przykładowa realizacja na każdą usługę (klucz = slug z src/lib/capabilities.ts). */
-export const featuredWork: Record<string, FeaturedWork> = {
+const featuredWorkData: Record<string, FeaturedWork> = {
   "social-media": {
     category: "Social media",
     client: "[Nazwa klienta]",
@@ -32,7 +33,7 @@ export const featuredWork: Record<string, FeaturedWork> = {
     orientation: "portrait",
     rotate: 3,
     image: null,
-    fallback: "/brand/gradient-red.jpg",
+    fallback: brandImage("gradient-red"),
   },
   "strony-www": {
     category: "Strona WWW",
@@ -42,7 +43,7 @@ export const featuredWork: Record<string, FeaturedWork> = {
     orientation: "landscape",
     rotate: -2,
     image: null,
-    fallback: "/brand/gradient-orange.jpg",
+    fallback: brandImage("gradient-orange"),
   },
   pozycjonowanie: {
     category: "SEO",
@@ -52,7 +53,7 @@ export const featuredWork: Record<string, FeaturedWork> = {
     orientation: "landscape",
     rotate: 2,
     image: null,
-    fallback: "/brand/gradient-wine.jpg",
+    fallback: brandImage("gradient-wine"),
   },
   "kampanie-ads": {
     category: "Kampanie Ads",
@@ -62,7 +63,7 @@ export const featuredWork: Record<string, FeaturedWork> = {
     orientation: "portrait",
     rotate: -3,
     image: null,
-    fallback: "/brand/gradient-red.jpg",
+    fallback: brandImage("gradient-red"),
   },
   branding: {
     category: "Branding",
@@ -72,6 +73,11 @@ export const featuredWork: Record<string, FeaturedWork> = {
     orientation: "portrait",
     rotate: 4,
     image: null,
-    fallback: "/brand/gradient-orange.jpg",
+    fallback: brandImage("gradient-orange"),
   },
 };
+
+/** Obrazek karty: plik z Vercel Blob `featured/<slug-usługi>` (np. featured/branding.jpg), inaczej pole `image`. */
+export const featuredWork: Record<string, FeaturedWork> = Object.fromEntries(
+  Object.entries(featuredWorkData).map(([slug, work]) => [slug, { ...work, image: media(`featured/${slug}`) ?? work.image }]),
+);

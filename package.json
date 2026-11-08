@@ -6,9 +6,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "contentful:seed": "node --no-warnings scripts/contentful/seed.ts",
+    "media:upload": "node --no-warnings --env-file-if-exists=.env.local scripts/media/upload.ts",
+    "media:sync": "node --no-warnings --env-file-if-exists=.env.local scripts/media/sync.ts"
   },
   "dependencies": {
+    "@vercel/blob": "2.8.2",
     "framer-motion": "^12.42.2",
     "lucide-react": "^1.26.0",
     "next": "16.2.11",

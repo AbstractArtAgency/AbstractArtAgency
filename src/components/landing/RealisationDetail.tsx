@@ -6,11 +6,13 @@ import Button from "@/src/components/ui/Button";
 import TextLink from "@/src/components/ui/TextLink";
 import { getCapabilityBySlug } from "@/src/lib/capabilities";
 import type { Realisation } from "@/src/lib/realisations";
+import { isVideo, mediaList } from "@/src/lib/media";
 import { ArrowUpRight } from "./Brand";
 
 /** Podstrona pojedynczej realizacji. Treść case study dojdzie z Contentful. */
 export default function RealisationDetail({ realisation }: { realisation: Realisation }) {
   const capability = getCapabilityBySlug(realisation.capability);
+  const gallery = mediaList(`realisations/${realisation.slug}/gallery`);
   const meta = [
     { label: "Klient", value: realisation.client },
     { label: "Zakres", value: capability?.title ?? realisation.capability },
@@ -52,6 +54,32 @@ export default function RealisationDetail({ realisation }: { realisation: Realis
             />
             <div className="pointer-events-none absolute inset-0 bg-noise opacity-20 mix-blend-overlay" />
           </div>
+
+          {/* galeria z Vercel Blob: realisations/<slug>/gallery/* (zdjęcia i filmy, kolejność wg nazwy pliku) */}
+          {gallery.length > 0 && (
+            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              {gallery.map((file, index) => (
+                <div
+                  key={file.pathname}
+                  className={`relative overflow-hidden rounded-[18px] bg-[#3A0A06] ${
+                    gallery.length % 2 === 1 && index === 0 ? "aspect-16/9 sm:col-span-2" : "aspect-4/3"
+                  }`}
+                >
+                  {isVideo(file) ? (
+                    <video src={file.url} controls playsInline preload="metadata" className="absolute inset-0 h-full w-full object-cover" />
+                  ) : (
+                    <Image
+                      src={file.url}
+                      alt={`${realisation.title} — zdjęcie ${index + 1}`}
+                      fill
+                      sizes="(min-width: 1152px) 552px, (min-width: 640px) 50vw, 100vw"
+                      className="object-cover"
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
 
           <dl className="m-0 mt-12 grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-x-8 gap-y-6">
             {meta.map(({ label, value }) => (

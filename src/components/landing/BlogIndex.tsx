@@ -7,6 +7,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { formatPostDate, type BlogPost } from "@/src/lib/blog";
 import { HoverFill, setOrigin } from "@/src/components/ui/Button";
 import { ArrowUpRight } from "./Brand";
+import { brandImage } from "@/src/lib/media";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -20,7 +21,7 @@ function PostCard({ post, featured = false }: { post: BlogPost; featured?: boole
       }`}
     >
       <Image
-        src={post.cover ?? post.fallback}
+        src={post.cover ?? brandImage(post.fallback)}
         alt={post.cover ? post.title : ""}
         fill
         sizes={featured ? "(min-width: 1152px) 1104px, 100vw" : "(min-width: 1024px) 360px, (min-width: 640px) 50vw, 100vw"}

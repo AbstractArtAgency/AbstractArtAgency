@@ -1,6 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { isVideo, mediaFile } from "@/src/lib/media";
 import { useRef } from "react";
 import { ArrowUpRight, Asterisk, GlobeRings, SparkLine } from "./Brand";
 import Button from "@/src/components/ui/Button";
@@ -9,6 +11,8 @@ const ease = [0.16, 1, 0.3, 1] as const;
 
 const display = "font-display font-extrabold font-stretch-112% uppercase leading-none tracking-display";
 const lineSize = "text-3xl xs:text-4xl sm:text-6xl md:text-7xl lg:text-8xl";
+
+const heroMedia = mediaFile("home/hero");
 
 export default function Hero() {
   const ref = useRef<HTMLElement>(null);
@@ -25,11 +29,27 @@ export default function Hero() {
       id="top"
       className="relative isolate flex min-h-svh flex-col overflow-hidden bg-[#160604] px-gutter pt-[108px] pb-10 text-bone after:pointer-events-none after:absolute after:inset-0 after:z-0 after:bg-noise after:opacity-16 after:mix-blend-overlay"
     >
+      {/* tło: zdjęcie lub film z Vercel Blob `home/hero` (np. home/hero.jpg / home/hero.mp4), inaczej domyślny gradient */}
       <motion.div
         aria-hidden="true"
         style={{ y: bgY }}
-        className="pointer-events-none absolute inset-0 -z-1 bg-hero bg-cover bg-center will-change-transform"
-      />
+        className="pointer-events-none absolute inset-0 -z-1 overflow-hidden bg-hero bg-cover bg-center will-change-transform"
+      >
+        {heroMedia &&
+          (isVideo(heroMedia) ? (
+            <video
+              src={heroMedia.url}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+          ) : (
+            <Image src={heroMedia.url} alt="" fill preload sizes="100vw" className="object-cover" />
+          ))}
+      </motion.div>
 
       <motion.div
         initial={{ opacity: 0, y: -10 }}

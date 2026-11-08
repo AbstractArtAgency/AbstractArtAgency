@@ -44,6 +44,7 @@
 
   --breakpoint-xs: 25rem; /* 400px — duże telefony */
 
+  /* tła marki — layout.tsx nadpisuje je adresami z Vercel Blob (brand/*), gdy pliki są wgrane */
   --background-image-hero: url("/brand/hero-bg.jpg");
   --background-image-cta: url("/brand/cta-bg.jpg");
   --background-image-paper-grain: url("/brand/paper-grain.png");
@@ -51,7 +52,7 @@
   /* statyczne światło na górze podstron (animacja tylko w hero strony głównej) */
   --background-image-glow-top:
     radial-gradient(55% 70% at 100% 0%, rgba(241, 96, 1, 0.16) 0%, rgba(221, 30, 27, 0.08) 45%, transparent 72%),
-    url("/brand/paper-grain.png");
+    var(--background-image-paper-grain);
 }
 
 /* inline: kolor siatki jest rozwiązywany na elemencie, więc działa też w .theme-light */

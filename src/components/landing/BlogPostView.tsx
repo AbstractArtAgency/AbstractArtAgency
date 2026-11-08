@@ -4,6 +4,7 @@ import Button from "@/src/components/ui/Button";
 import TextLink from "@/src/components/ui/TextLink";
 import { formatPostDate, type BlogBlock, type BlogPost } from "@/src/lib/blog";
 import { ArrowUpRight } from "./Brand";
+import { brandImage } from "@/src/lib/media";
 
 function Block({ block }: { block: BlogBlock }) {
   switch (block.type) {
@@ -64,7 +65,7 @@ export default function BlogPostView({ post, more }: { post: BlogPost; more: Blo
 
           <div className="relative mt-12 aspect-16/9 overflow-hidden rounded-[18px] bg-[#3A0A06] shadow-[0_30px_60px_rgba(14,9,7,0.2)]">
             <Image
-              src={post.cover ?? post.fallback}
+              src={post.cover ?? brandImage(post.fallback)}
               alt={post.cover ? post.title : ""}
               fill
               preload

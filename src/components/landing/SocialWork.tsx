@@ -4,15 +4,17 @@ import { motion } from "framer-motion";
 import { ArrowUpRight } from "./Brand";
 import TextLink from "@/src/components/ui/TextLink";
 import Image from "next/image";
+import { brandImage, media } from "@/src/lib/media";
 
-// Uzupełnij prawdziwymi danymi z realizacji (zdjęcie pionowe, nazwa klienta, rok, opis).
+// Uzupełnij prawdziwymi danymi z realizacji (nazwa klienta, rok, opis).
+// Zdjęcia pionowe: Vercel Blob home/social-works/1, /2, /3 (docs/MEDIA.md) — do tego czasu gradienty.
 const works = [
   {
     category: "Social media",
     year: "2026",
     client: "[Nazwa klienta]",
     desc: "[Krótki opis projektu i wynik, np. wzrost zasięgu]",
-    image: "/brand/gradient-red.jpg",
+    image: media("home/social-works/1") ?? brandImage("gradient-red"),
     fallback: "#3A0A06",
   },
   {
@@ -20,7 +22,7 @@ const works = [
     year: "2026",
     client: "[Nazwa klienta]",
     desc: "[Krótki opis projektu i wynik]",
-    image: "/brand/gradient-orange.jpg",
+    image: media("home/social-works/2") ?? brandImage("gradient-orange"),
     fallback: "#8A1A0E",
   },
   {
@@ -28,7 +30,7 @@ const works = [
     year: "2026",
     client: "[Nazwa klienta]",
     desc: "[Krótki opis projektu i wynik]",
-    image: "/brand/gradient-wine.jpg",
+    image: media("home/social-works/3") ?? brandImage("gradient-wine"),
     fallback: "#5A0E09",
   },
 ];

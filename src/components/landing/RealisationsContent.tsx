@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { brandImage, media } from "@/src/lib/media";
 import { AnimatePresence, motion } from "framer-motion";
 import Contact from "@/src/components/landing/Contact";
 import Footer from "@/src/components/landing/Footer";
@@ -155,14 +156,14 @@ export default function RealisationsContent({ realisations }: { realisations: Re
                 className="hidden flex-col items-end gap-3 text-right md:flex"
               >
                 <div className="relative aspect-16/10 w-36 overflow-hidden rounded-xl shadow-lg lg:w-44">
-                  <Image src="/brand/gradient-orange.jpg" alt="" fill sizes="176px" className="object-cover" />
+                  <Image src={media("realisations-page/thumbnail") ?? brandImage("gradient-orange")} alt="" fill sizes="176px" className="object-cover" />
                   <span className="absolute bottom-2 left-2 font-mono text-[9px] uppercase tracking-[0.12em] text-bone">
                     Kampanie
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="flex -space-x-2">
-                    {["/brand/gradient-red.jpg", "/brand/gradient-wine.jpg", "/brand/gradient-orange.jpg"].map((src) => (
+                    {[brandImage("gradient-red"), brandImage("gradient-wine"), brandImage("gradient-orange")].map((fallback, index) => media(`realisations-page/avatar-${index + 1}`) ?? fallback).map((src) => (
                       <span key={src} className="relative h-7 w-7 overflow-hidden rounded-full border-2 border-cream">
                         <Image src={src} alt="" fill sizes="28px" className="object-cover" />
                       </span>

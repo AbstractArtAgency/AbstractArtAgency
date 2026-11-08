@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { brandImage, media, slugify } from "@/src/lib/media";
 import { AnimatePresence, motion } from "framer-motion";
 import Contact from "@/src/components/landing/Contact";
 import Footer from "@/src/components/landing/Footer";
@@ -17,44 +18,49 @@ const team = [
     name: "Jakub Przyciasa",
     role: "Founder & Marketing Lead",
     rotate: -3,
-    background: "/brand/gradient-red.jpg",
+    background: brandImage("gradient-red"),
   },
   {
     initials: "DŚ",
     name: "Dawid Ślusarczyk",
     role: "Head of Design",
     rotate: 2,
-    background: "/brand/gradient-orange.jpg",
+    background: brandImage("gradient-orange"),
   },
   {
     initials: "JW",
     name: "Jan Walicki",
     role: "Lead Developer",
     rotate: -2,
-    background: "/brand/gradient-wine.jpg",
+    background: brandImage("gradient-wine"),
   },
   {
     initials: "JT",
     name: "Julia Tenerle",
     role: "Social Media & Content Manager",
     rotate: 3,
-    background: "/brand/gradient-red.jpg",
+    background: brandImage("gradient-red"),
   },
 ];
 
 /** Karta osoby w stylu kart realizacji: gradient marki, rola u góry, inicjały i imię na dole. */
 function TeamCard({ member }: { member: (typeof team)[number] }) {
+  // zdjęcie z Vercel Blob: team/<imie-nazwisko>.jpg, np. team/jan-walicki.jpg
+  const photo = media(`team/${slugify(member.name)}`);
   return (
     <div className="relative isolate aspect-4/5 w-full overflow-hidden rounded-[18px] bg-[#3A0A06] text-bone shadow-[0_30px_60px_rgba(14,9,7,0.3)]">
-      <Image src={member.background} alt="" fill sizes="(min-width: 1024px) 288px, 240px" className="-z-1 object-cover" />
+      <Image src={photo ?? member.background} alt={photo ? member.name : ""} fill sizes="(min-width: 1024px) 288px, 240px" className="-z-1 object-cover" />
+      {photo && <div className="pointer-events-none absolute inset-0 -z-1 bg-linear-to-t from-coal/60 via-transparent to-transparent" />}
       <div className="pointer-events-none absolute inset-0 -z-1 bg-noise opacity-20 mix-blend-overlay" />
       <div className="flex h-full flex-col justify-between p-4 sm:p-5">
         <div className="flex justify-between gap-3 font-mono text-[9px] uppercase tracking-[0.12em] sm:text-[10px]">
         </div>
         <div className="flex flex-col gap-2">
-          <span aria-hidden="true" className="font-display text-6xl font-extrabold font-stretch-112% leading-none tracking-[-0.04em] text-bone/30">
-            {member.initials}
-          </span>
+          {!photo && (
+            <span aria-hidden="true" className="font-display text-6xl font-extrabold font-stretch-112% leading-none tracking-[-0.04em] text-bone/30">
+              {member.initials}
+            </span>
+          )}
           <p className="m-0 text-xl font-extrabold font-stretch-110% uppercase leading-[0.95] tracking-[-0.02em]">
             {member.name}
           </p>

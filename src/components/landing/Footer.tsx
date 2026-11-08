@@ -63,9 +63,9 @@ const footerColumns = [
 
 export default function Footer() {
   return (
-    <footer className="theme-dark relative bg-cream p-3 text-ink md:p-4">
+    <footer className="theme-dark relative bg-cream pt-3 text-ink md:pt-4">
       {/* panel z ciepłym gradientem wyłaniającym się od dołu, jak plakat */}
-      <div className="@container relative isolate overflow-hidden rounded-[24px] bg-[#120706]">
+      <div className="@container relative isolate overflow-hidden rounded-t-[24px] bg-[#120706]">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 -z-1"

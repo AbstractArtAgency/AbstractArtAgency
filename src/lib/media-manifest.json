@@ -1,0 +1,32 @@
+{
+  "brand/cta-bg": {
+    "pathname": "brand/cta-bg.webp",
+    "url": "https://c58tw6eaonx4e8gp.public.blob.vercel-storage.com/brand/cta-bg.webp",
+    "contentType": "image/webp"
+  },
+  "brand/gradient-orange": {
+    "pathname": "brand/gradient-orange.webp",
+    "url": "https://c58tw6eaonx4e8gp.public.blob.vercel-storage.com/brand/gradient-orange.webp",
+    "contentType": "image/webp"
+  },
+  "brand/gradient-red": {
+    "pathname": "brand/gradient-red.webp",
+    "url": "https://c58tw6eaonx4e8gp.public.blob.vercel-storage.com/brand/gradient-red.webp",
+    "contentType": "image/webp"
+  },
+  "brand/gradient-wine": {
+    "pathname": "brand/gradient-wine.webp",
+    "url": "https://c58tw6eaonx4e8gp.public.blob.vercel-storage.com/brand/gradient-wine.webp",
+    "contentType": "image/webp"
+  },
+  "brand/hero-bg": {
+    "pathname": "brand/hero-bg.webp",
+    "url": "https://c58tw6eaonx4e8gp.public.blob.vercel-storage.com/brand/hero-bg.webp",
+    "contentType": "image/webp"
+  },
+  "brand/paper-grain": {
+    "pathname": "brand/paper-grain.png",
+    "url": "https://c58tw6eaonx4e8gp.public.blob.vercel-storage.com/brand/paper-grain.png",
+    "contentType": "image/png"
+  }
+}

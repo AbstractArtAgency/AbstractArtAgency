@@ -1,4 +1,5 @@
 import type { StaticImageData } from "next/image";
+import type { BrandImage } from "./media";
 
 /**
  * Blog. Docelowo wpisy przyjdą z Contentful — wtedy wystarczy podmienić ciało
@@ -24,7 +25,8 @@ export type BlogPost = {
   author: string;
   /** okładka; null = gradient zastępczy */
   cover: string | StaticImageData | null;
-  fallback: string;
+  /** gradient marki pokazywany bez okładki (brandImage) */
+  fallback: BrandImage;
   body: BlogBlock[];
 };
 
@@ -40,7 +42,7 @@ const posts: BlogPost[] = [
     readingTime: 6,
     author: "Julia Tenerle",
     cover: null,
-    fallback: "/brand/gradient-red.jpg",
+    fallback: "gradient-red",
     body: [
       {
         type: "paragraph",
@@ -85,7 +87,7 @@ const posts: BlogPost[] = [
     readingTime: 5,
     author: "Jan Walicki",
     cover: null,
-    fallback: "/brand/gradient-orange.jpg",
+    fallback: "gradient-orange",
     body: [
       {
         type: "paragraph",
@@ -122,7 +124,7 @@ const posts: BlogPost[] = [
     readingTime: 7,
     author: "Jakub Przyciasa",
     cover: null,
-    fallback: "/brand/gradient-wine.jpg",
+    fallback: "gradient-wine",
     body: [
       {
         type: "paragraph",
@@ -159,7 +161,7 @@ const posts: BlogPost[] = [
     readingTime: 6,
     author: "Jakub Przyciasa",
     cover: null,
-    fallback: "/brand/gradient-red.jpg",
+    fallback: "gradient-red",
     body: [
       {
         type: "paragraph",
@@ -195,7 +197,7 @@ const posts: BlogPost[] = [
     readingTime: 5,
     author: "Dawid Ślusarczyk",
     cover: null,
-    fallback: "/brand/gradient-orange.jpg",
+    fallback: "gradient-orange",
     body: [
       {
         type: "paragraph",
