@@ -16,31 +16,31 @@ const team = [
   {
     initials: "JP",
     name: "Jakub Przyciasa",
-    role: "Founder & Marketing Lead",
+    role: "Founder & CEO",
     rotate: -3,
     background: brandImage("gradient-red"),
   },
-  {
-    initials: "DŚ",
-    name: "Dawid Ślusarczyk",
-    role: "Head of Design",
-    rotate: 2,
-    background: brandImage("gradient-orange"),
-  },
-  {
-    initials: "JW",
-    name: "Jan Walicki",
-    role: "Lead Developer",
-    rotate: -2,
-    background: brandImage("gradient-wine"),
-  },
-  {
-    initials: "JT",
-    name: "Julia Tenerle",
-    role: "Social Media & Content Manager",
-    rotate: 3,
-    background: brandImage("gradient-red"),
-  },
+  // {
+  //   initials: "DŚ",
+  //   name: "Dawid Ślusarczyk",
+  //   role: "Head of Design",
+  //   rotate: 2,
+  //   background: brandImage("gradient-orange"),
+  // },
+  // {
+  //   initials: "JW",
+  //   name: "Jan Walicki",
+  //   role: "Lead Developer",
+  //   rotate: -2,
+  //   background: brandImage("gradient-wine"),
+  // },
+  // {
+  //   initials: "JT",
+  //   name: "Julia Tenerle",
+  //   role: "Social Media & Content Manager",
+  //   rotate: 3,
+  //   background: brandImage("gradient-red"),
+  // },
 ];
 
 /** Karta osoby w stylu kart realizacji: gradient marki, rola u góry, inicjały i imię na dole. */
