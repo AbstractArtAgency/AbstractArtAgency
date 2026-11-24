@@ -4,33 +4,36 @@ import { motion } from "framer-motion";
 import { ArrowUpRight } from "./Brand";
 import TextLink from "@/src/components/ui/TextLink";
 import Image from "next/image";
-import { brandImage, media } from "@/src/lib/media";
+import { brandImage, isVideo, mediaFile } from "@/src/lib/media";
 
 // Uzupełnij prawdziwymi danymi z realizacji (nazwa klienta, rok, opis).
-// Zdjęcia pionowe: Vercel Blob home/social-works/1, /2, /3 (docs/MEDIA.md) — do tego czasu gradienty.
+// Zdjęcia lub filmy: Vercel Blob home/social-works/1, /2, /3 (docs/MEDIA.md).
 const works = [
   {
-    category: "Social media",
+    category: "Social media, reels",
     year: "2026",
-    client: "[Nazwa klienta]",
-    desc: "[Krótki opis projektu i wynik, np. wzrost zasięgu]",
-    image: media("home/social-works/1") ?? brandImage("gradient-red"),
+    client: "Bailla Party",
+    desc: "Videorelacja z imprezy",
+    media: mediaFile("home/social-works/1"),
+    poster: brandImage("gradient-red"),
     fallback: "#3A0A06",
   },
   {
-    category: "Produkcja contentu",
+    category: "Social media, zdjęcia",
     year: "2026",
-    client: "[Nazwa klienta]",
-    desc: "[Krótki opis projektu i wynik]",
-    image: media("home/social-works/2") ?? brandImage("gradient-orange"),
+    client: "Miłosz Skierski",
+    desc: "Fotorelacja z koncertu",
+    media: mediaFile("home/social-works/2"),
+    poster: brandImage("gradient-orange"),
     fallback: "#8A1A0E",
   },
   {
-    category: "Social media + Ads",
+    category: "Social media, video",
     year: "2026",
-    client: "[Nazwa klienta]",
-    desc: "[Krótki opis projektu i wynik]",
-    image: media("home/social-works/3") ?? brandImage("gradient-wine"),
+    client: "WBW",
+    desc: "Wielki finał - Warszawa 2026",
+    media: mediaFile("home/social-works/3"),
+    poster: brandImage("gradient-wine"),
     fallback: "#5A0E09",
   },
 ];
@@ -64,7 +67,7 @@ export default function SocialWork() {
         <div className="grid grid-cols-[repeat(auto-fit,minmax(min(300px,100%),1fr))] gap-5">
           {works.map((work, index) => (
             <motion.article
-              key={work.category}
+              key={index}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
@@ -72,13 +75,27 @@ export default function SocialWork() {
               className="relative h-[420px] overflow-hidden rounded-[18px] sm:h-[480px] md:h-[560px]"
               style={{ background: work.fallback }}
             >
-              <Image
-                src={work.image}
-                alt="[Zdjęcie lub kadr z projektu]"
-                fill
-                sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                className="object-cover"
-              />
+              {work.media && isVideo(work.media) ? (
+                <video
+                  aria-hidden="true"
+                  src={work.media.url}
+                  poster={work.poster}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+              ) : (
+                <Image
+                  src={work.media?.url ?? work.poster}
+                  alt={work.media ? "[Zdjęcie lub kadr z projektu]" : ""}
+                  fill
+                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                  className="object-cover"
+                />
+              )}
               <div className="absolute inset-0 flex flex-col justify-between p-6 text-bone sm:p-7">
                 <div className="flex justify-between font-mono text-[11px] uppercase tracking-[0.1em]">
                   <span>{work.category}</span>

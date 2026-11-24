@@ -33,11 +33,17 @@ export function requireToken() {
 /** Pobiera spis wszystkich plików z Vercel Blob i zapisuje src/lib/media-manifest.json. */
 export async function syncManifest(token: string) {
   const manifest: Record<string, { pathname: string; url: string; contentType: string }> = {};
+  const uploadedAtBySlot = new Map<string, number>();
   let cursor: string | undefined;
   do {
     const page = await list({ token, cursor, limit: 1000 });
     for (const blob of page.blobs) {
-      manifest[slotOf(blob.pathname)] = {
+      const slot = slotOf(blob.pathname);
+      const uploadedAt = blob.uploadedAt.getTime();
+      if (uploadedAt < (uploadedAtBySlot.get(slot) ?? -Infinity)) continue;
+
+      uploadedAtBySlot.set(slot, uploadedAt);
+      manifest[slot] = {
         pathname: blob.pathname,
         url: blob.url,
         contentType: contentTypeOf(blob.pathname),

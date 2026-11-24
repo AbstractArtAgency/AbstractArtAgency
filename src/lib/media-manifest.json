@@ -28,5 +28,20 @@
     "pathname": "brand/paper-grain.png",
     "url": "https://c58tw6eaonx4e8gp.public.blob.vercel-storage.com/brand/paper-grain.png",
     "contentType": "image/png"
+  },
+  "home/social-works/1": {
+    "pathname": "home/social-works/1.mp4",
+    "url": "https://c58tw6eaonx4e8gp.public.blob.vercel-storage.com/home/social-works/1.mp4",
+    "contentType": "video/mp4"
+  },
+  "home/social-works/2": {
+    "pathname": "home/social-works/2.jpg",
+    "url": "https://c58tw6eaonx4e8gp.public.blob.vercel-storage.com/home/social-works/2.jpg",
+    "contentType": "image/jpeg"
+  },
+  "home/social-works/3": {
+    "pathname": "home/social-works/3.mp4",
+    "url": "https://c58tw6eaonx4e8gp.public.blob.vercel-storage.com/home/social-works/3.mp4",
+    "contentType": "video/mp4"
   }
 }

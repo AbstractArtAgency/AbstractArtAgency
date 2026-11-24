@@ -9,7 +9,7 @@ Wszystkie zdjęcia i filmy strony (poza blogiem, który idzie przez Contentful) 
 | `brand/gradient-red`, `-orange`, `-wine` | gradienty marki — zastępcze tła kart i okładek wszędzie, gdzie nie ma zdjęcia | gotowe pliki WebP w `media/brand/` |
 | `brand/hero-bg`, `brand/cta-bg`, `brand/paper-grain` | domyślne tło hero, tło sekcji kontaktowej, ziarno papieru | gotowe pliki w `media/brand/` |
 | `home/hero` | tło hero na stronie głównej — **zdjęcie albo film** | poziomy, min. 1920 px; film MP4 bez dźwięku, krótka pętla |
-| `home/social-works/1`, `/2`, `/3` | karty „Realizacje social media” na stronie głównej | pionowe 4:5 |
+| `home/social-works/1`, `/2`, `/3` | karty „Realizacje social media” na stronie głównej — **zdjęcie albo film** | pionowe 4:5; film MP4 odtwarza się automatycznie, bez dźwięku, w pętli |
 | `featured/<usługa>` | karta po najechaniu na usługę na stronie Realizacje | social-media, kampanie-ads, branding: pionowe 4:5; strony-www, pozycjonowanie: poziome 16:10 |
 | `realisations/<slug>/cover` | okładka realizacji: tło po hoverze na liście, karty w hero, okładka podstrony | poziome 16:9 |
 | `realisations/<slug>/gallery/<nazwa>` | galeria na podstronie realizacji — **zdjęcia i filmy**, kolejność wg nazwy (01, 02, …) | 4:3; filmy MP4 |
@@ -56,6 +56,8 @@ npm run media:upload
 ```
 
 Skrypt wgra pliki pod właściwe ścieżki (nadpisując istniejące) i odświeży spis plików `src/lib/media-manifest.json`.
+
+Trzymaj w lokalnym folderze jeden plik na slot. Przy zamianie zdjęcia na film zachowaj nazwę bez rozszerzenia, np. zamień `home/social-works/1.jpg` na `home/social-works/1.mp4`. Jeśli w Blob są obie wersje, spis wybierze ostatnio wgraną.
 
 **Sposób 2 — przez panel Vercel:** wgraj plik w Storage → Blob, nadając mu nazwę zgodną ze slotem (bez losowego sufiksu), a potem uruchom `npm run media:sync`, żeby odświeżyć spis.
 
