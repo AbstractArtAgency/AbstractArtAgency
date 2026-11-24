@@ -4,7 +4,7 @@ import Footer from "@/src/components/landing/Footer";
 import Navbar from "@/src/components/landing/Navbar";
 
 export const metadata: Metadata = {
-  title: "Dołącz do nas AbstractArt",
+  title: "Dołącz do zespołu AbstractArt",
   description: "Szukasz nowych wyzwań? Wyślij krótkie zgłoszenie, a odezwiemy się do Ciebie.",
 };
 

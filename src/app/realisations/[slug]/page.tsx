@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const realisation = await getRealisationBySlug(slug);
   if (!realisation) return {};
   return {
-    title: `${realisation.title} — Realizacje AbstractArt`,
+    title: `${realisation.title} - Realizacje AbstractArt`,
     description: realisation.summary,
   };
 }

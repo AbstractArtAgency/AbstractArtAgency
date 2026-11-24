@@ -4,8 +4,8 @@ import Footer from "@/src/components/landing/Footer";
 import Navbar from "@/src/components/landing/Navbar";
 
 export const metadata: Metadata = {
-  title: "Kontakt AbstractArt",
-  description: "Napisz kilka słów o swoim biznesie i celach — odezwiemy się w ciągu 24 godzin z pierwszymi pomysłami.",
+  title: "Kontakt - AbstractArt",
+  description: "Napisz kilka słów o swoim biznesie i celach, jakie chcesz osiągnąć. Odezwiemy się do Ciebie w ciągu 24 godzin z pierwszymi pomysłami.",
 };
 
 export default function ContactPage() {

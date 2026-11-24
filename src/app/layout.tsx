@@ -26,7 +26,7 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: "AbstractArt - Strony internetowe i marketing, które działają",
+  title: "AbstractArt - Agencja marketingowa",
   description:
     "Agencja tworząca nowoczesne strony internetowe i kampanie marketingowe. Projektujemy, kodujemy i skalujemy marki online.",
 };

@@ -6,8 +6,8 @@ import Navbar from "@/src/components/landing/Navbar";
 import { getPosts } from "@/src/lib/blog";
 
 export const metadata: Metadata = {
-  title: "Blog — AbstractArt",
-  description: "Porady o social mediach, stronach www, SEO, kampaniach reklamowych i brandingu od zespołu AbstractArt.",
+  title: "Blog - AbstractArt",
+  description: "Najważniejsze informacje ze świata marketingu internetowego, technologii i designu. Porady, case studies i inspiracje dla Twojego biznesu.",
 };
 
 export default async function BlogPage() {

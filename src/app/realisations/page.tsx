@@ -3,8 +3,8 @@ import RealisationsContent from "@/src/components/landing/RealisationsContent";
 import { getRealisations } from "@/src/lib/realisations";
 
 export const metadata: Metadata = {
-  title: "Realizacje — AbstractArt",
-  description: "Zobacz strony i projekty, które wykonaliśmy dla naszych klientów.",
+  title: "Realizacje - AbstractArt",
+  description: "Zobacz projekty, które wykonaliśmy dla naszych klientów, lub projekty koncepcyjne, które są dowodem naszej kreatywności.",
 };
 
 export default async function RealisationsPage() {
