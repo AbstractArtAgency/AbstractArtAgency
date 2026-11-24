@@ -28,12 +28,12 @@ const socialLinks = [
   {
     icon: Code2,
     href: "https://github.com/AbstractArtAgency",
-    label: "Kod",
+    label: "Github",
     external: true,
   },
-  { icon: InstagramIcon, href: "#", label: "Instagram" },
-  { icon: Globe2, href: "/", label: "Web" },
-  { icon: Mail, href: `mailto:${EMAIL}`, label: "E-mail" },
+  { icon: InstagramIcon, href: "https://www.instagram.com/abstractartagency/", label: "Instagram", external: true },
+  { icon: Globe2, href: "/", label: "Web", external: true },
+  { icon: Mail, href: `mailto:${EMAIL}`, label: "E-mail", external: true },
 ];
 
 // mapa strony: wszystkie istniejące podstrony

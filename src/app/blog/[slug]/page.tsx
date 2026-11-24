@@ -8,6 +8,8 @@ import { getPostBySlug, getPosts } from "@/src/lib/blog";
 
 type Props = { params: Promise<{ slug: string }> };
 
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
   const posts = await getPosts();
   return posts.map((post) => ({ slug: post.slug }));

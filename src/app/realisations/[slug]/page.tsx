@@ -5,6 +5,8 @@ import { getRealisationBySlug, getRealisations } from "@/src/lib/realisations";
 
 type Props = { params: Promise<{ slug: string }> };
 
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
   const realisations = await getRealisations();
   return realisations.map((item) => ({ slug: item.slug }));
